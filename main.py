@@ -22,9 +22,9 @@ init.init()
 # print(r"{}".format(link))
 # db = DbInterface(r"{}".format(link))
 # # C:\\Users\\Илон Маск\\Dropbox\\Programming_projects\\database.db
-db = DbInterface(r"database.db")
+db = DbInterface(r"D:\Dropbox\\Programming_projects\\Campgames_bot\\database.db")
 print(db)
-CHOOSE_LANG, CHECK_PASSWORD, GAMES, BACK, ASK_TYPE, ASK_AGE, ASK_AMOUNT, ASK_LOCATION, ASK_PROPS, RESULT, ANSWER,BACK_ANSWER = range(12)
+CHOOSE_LANG, CHECK_PASSWORD, ADMIN, GAMES, BACK, ASK_TYPE, ASK_AGE, ASK_AMOUNT, ASK_LOCATION, ASK_PROPS, RESULT, ANSWER,BACK_ANSWER = range(13)
 
 UM = UserManager()
 
@@ -42,7 +42,7 @@ def start_query(update, context):
     return GAMES
 
 def game_start(update,context):
-    lang = UM.currentUsers[update.message.chat.id].lang
+    lang = language(update,context)
     if update.message.text == text["games"][lang]:
         return a_type(update,context)
     elif update.message.text == text["random"][lang]:
@@ -74,14 +74,17 @@ def a_type(update,context):
 
 def a_age(update,context):
     lang = UM.currentUsers[update.message.chat.id].lang
-    if update.message.text == text["team_building"][lang]:
+    massage = update.message.text
+    if massage == text["team_building"][lang]:
         UM.currentUsers[update.message.chat.id].take_answer(0,0)
-    elif update.message.text == text["ice_breaker"][lang]:
+    elif massage == text["ice_breaker"][lang]:
         UM.currentUsers[update.message.chat.id].take_answer(0,1)
-    elif update.message.text == text["timefiller"][lang]:
+    elif massage == text["timefiller"][lang]:
         UM.currentUsers[update.message.chat.id].take_answer(0,2)
-    elif update.message.text == text["back"][lang] and UM.currentUsers[update.message.chat.id].flag == 1:
+    elif massage == text["back"][lang] and UM.currentUsers[update.message.chat.id].flag == 1:
         return start_query(update,context)
+    elif massage == text["any"][lang]:
+        pass
     UM.currentUsers[update.message.chat.id].set_flag(2)
 
     reply_keyboard = [[text["6-12"],text["12+"]],
@@ -92,12 +95,15 @@ def a_age(update,context):
 
 def a_amount(update,context):
     lang = UM.currentUsers[update.message.chat.id].lang
-    if update.message.text == text["6-12"]:
+    massage = update.message.text
+    if massage == text["6-12"]:
         UM.currentUsers[update.message.chat.id].take_answer(1,0)
-    elif update.message.text == text["12+"]:
+    elif massage == text["12+"]:
         UM.currentUsers[update.message.chat.id].take_answer(1,1)
-    elif update.message.text == text["back"][lang] and UM.currentUsers[update.message.chat.id].flag == 2:
+    elif massage == text["back"][lang] and UM.currentUsers[update.message.chat.id].flag == 2:
         return a_type(update,context)
+    elif massage == text["any"][lang]:
+        pass
     UM.currentUsers[update.message.chat.id].set_flag(3)
 
     reply_keyboard = [[text["up to 5"][lang],text["5-20"],text["20+"]],
@@ -108,14 +114,17 @@ def a_amount(update,context):
 
 def a_location(update,context):
     lang = UM.currentUsers[update.message.chat.id].lang
-    if update.message.text == text["up to 5"][lang]:
+    massage = update.message.text
+    if massage == text["up to 5"][lang]:
         UM.currentUsers[update.message.chat.id].take_answer(2,0)
-    elif update.message.text == text["5-20"]:
+    elif massage == text["5-20"]:
         UM.currentUsers[update.message.chat.id].take_answer(2,1)
-    elif update.message.text == text["20+"]:
+    elif massage == text["20+"]:
         UM.currentUsers[update.message.chat.id].take_answer(2,2)
-    elif update.message.text == text["back"][lang] and UM.currentUsers[update.message.chat.id].flag == 3:
+    elif massage == text["back"][lang] and UM.currentUsers[update.message.chat.id].flag == 3:
         return a_age(update,context)
+    elif massage == text["any"][lang]:
+        pass
     UM.currentUsers[update.message.chat.id].set_flag(4)
 
     reply_keyboard = [[text["outside"][lang],text["inside"][lang]],
@@ -126,12 +135,15 @@ def a_location(update,context):
 
 def a_props(update,context):
     lang = UM.currentUsers[update.message.chat.id].lang
-    if update.message.text == text["outside"][lang]:
+    massage = update.message.text
+    if massage == text["outside"][lang]:
         UM.currentUsers[update.message.chat.id].take_answer(3,0)
-    elif update.message.text == text["inside"][lang]:
+    elif massage == text["inside"][lang]:
         UM.currentUsers[update.message.chat.id].take_answer(3,1)
-    elif update.message.text == text["back"][lang] and UM.currentUsers[update.message.chat.id].flag == 4:
+    elif massage == text["back"][lang] and UM.currentUsers[update.message.chat.id].flag == 4:
         return a_amount(update,context)
+    elif massage == text["any"][lang]:
+        pass
     UM.currentUsers[update.message.chat.id].set_flag(5)
 
     reply_keyboard = [[text["yes"][lang],text["no"][lang]],
@@ -142,12 +154,15 @@ def a_props(update,context):
 
 def result(update,context):
     lang = UM.currentUsers[update.message.chat.id].lang
-    if update.message.text == text["no"][lang]:
+    massage = update.message.text
+    if massage == text["no"][lang]:
         UM.currentUsers[update.message.chat.id].take_answer(4,0)
-    elif update.message.text == text["yes"][lang]:
+    elif massage == text["yes"][lang]:
         UM.currentUsers[update.message.chat.id].take_answer(4,1)
-    elif update.message.text == text["back"][lang] and UM.currentUsers[update.message.chat.id].flag == 5:
+    elif massage == text["back"][lang] and UM.currentUsers[update.message.chat.id].flag == 5:
         return a_location(update,context)
+    elif massage == text["any"][lang]:
+        pass
     UM.currentUsers[update.message.chat.id].set_flag(6)
 
     answer = UM.currentUsers[update.message.chat.id].answers
@@ -162,16 +177,18 @@ def result(update,context):
 
 def final_answer(update,context):
     lang = UM.currentUsers[update.message.chat.id].lang
-    if update.message.text == text["back"][lang] and UM.currentUsers[update.message.chat.id].flag == 6:
+    massage = update.message.text
+    if massage == text["back"][lang] and UM.currentUsers[update.message.chat.id].flag == 6:
         return a_props(update,context)
-    elif update.message.text == text["menu"][lang]:
+    elif massage == text["menu"][lang]:
+        UM.delete_user(update.message.chat.id)
         return start_query(update, context)
     UM.currentUsers[update.message.chat.id].set_flag(7)
 
     solution = None
     language = "en" if lang==1 else "ru"
     for key in names:
-        if update.message.text == names[key][language]:
+        if massage == names[key][language]:
             solution = key
             break
     reply_keyboard = [[text["back"][lang],text["menu"][lang]]]
@@ -180,10 +197,11 @@ def final_answer(update,context):
     return BACK_ANSWER
 
 def back_answer(update,context):
+    massage = update.message.text
     lang = UM.currentUsers[update.message.chat.id].lang
-    if update.message.text == text["back"][lang]:
+    if massage == text["back"][lang]:
         return result(update,context)
-    elif update.message.text == text["menu"][lang]:
+    elif massage == text["menu"][lang]:
         return start_query(update, context)
 
 
@@ -240,11 +258,30 @@ def set_lang(update, context):
     return start(update, context)
 
 def admin(update, context):
-    pass
+    lang = language(update,context)
+    if update.message.chat.username in ("V_vargan","lisatkachenko"):
+        FILENAME = r"password.txt"
+        with open(FILENAME, "r") as file:
+            PASSWORD = file.readline()
+            file.close()
+        update.message.reply_text("Hi boss, current password is\n\n"+PASSWORD)
+        reply_keyboard = [[text["yes"][lang],text["back"][lang]]]
+        markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
+        update.message.reply_text("Would you like to change it?", reply_markup = markup)
+        return ADMIN
+    else:
+        update.message.reply_text("You are not my boss, maybe later)")
+        return start(update, context)
+
+def admin_password(update, context):
+    lang = language(update,context)
+    if update.message.text == text["back"][lang]:
+        return start(update, context)
+    elif update.message.text == text["yes"][lang]:
+        update.message.reply_text("Ok man, set the new PASSWORD")
 
 def done(update, context):
-    global answer
-    answer = [None,None,None,None,None]
+
     update.message.reply_text('END')
     return ConversationHandler.END
 
@@ -266,6 +303,7 @@ def main():
                       CommandHandler('admin', admin)],
 
         states={
+            ADMIN: [MessageHandler(Filters.text, admin_password)],
             CHOOSE_LANG: [MessageHandler(Filters.text, set_lang)],
             CHECK_PASSWORD: [MessageHandler(Filters.text, check_password)],
             GAMES: [MessageHandler(Filters.text, game_start)],
@@ -280,8 +318,10 @@ def main():
             BACK_ANSWER: [MessageHandler(Filters.text, back_answer)],
         },
 
-        fallbacks=[CommandHandler('stop', done),
-                   CommandHandler('language', ask_lang)]
+        fallbacks=[CommandHandler('stop', done),]
+                #    CommandHandler('start', start),
+                #    CommandHandler('admin', admin),
+                #    CommandHandler('language', ask_lang)]
     )
 
     dp.add_handler(conv_handler)

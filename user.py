@@ -1,5 +1,5 @@
 from database import DbInterface
-db = DbInterface("database.db")
+db = DbInterface(r"D:\Dropbox\\Programming_projects\\Campgames_bot\\database.db")
 
 class UserManager:
 

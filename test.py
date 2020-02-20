@@ -1,19 +1,19 @@
-import sqlite3
-from os import getcwd
+# import sqlite3
+# from os import getcwd
 
-print(getcwd())
-print()
-link = getcwd().split("\\")
-link = link[:-1]
-link = "\\\\".join(link)+"\\\\database.db"
-print(r"D:\\Dropbox\\database.db")
+# print(getcwd())
+# print()
+# link = getcwd().split("\\")
+# link = link[:-1]
+# link = "\\\\".join(link)+"\\\\database.db"
+# print(r"D:\\Dropbox\\database.db")
+# # D:\Dropbox\Programming_projects\Campgames_bot\database.db
+# conn = sqlite3.connect(r"D:\Dropbox\\Programming_projects\\Campgames_bot\\database.db", check_same_thread=False)
+# cursor = conn.cursor()
 
-conn = sqlite3.connect(r"D:\\Dropbox\\database.db", check_same_thread=False)
-cursor = conn.cursor()
+# sql = 'SELECT * from Games'
 
-sql = 'SELECT * from Games'
-
-print(cursor.execute(sql))
+# print(cursor.execute(sql))
 
 
 # FILENAME = r"C:\\Users\\Vargan\\Dropbox\\Programming_projects\\Campgames _bot\\password.txt"
