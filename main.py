@@ -169,7 +169,7 @@ def result(update,context):
     answer = UM.currentUsers[update.message.chat.id].answers
     # update.message.reply_text(answer)
     game_id = db.getGames(answer[0],answer[1],answer[2],answer[3],answer[4])
-    buttons_language = "en" if lang==1 else "ru"
+    buttons_language = "en" if lang == 1 else "ru"
     reply_keyboard = [[names[i][buttons_language]] for i in game_id]
     reply_keyboard.append([text["back"][lang],text["menu"][lang]])
     markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
@@ -194,7 +194,7 @@ def final_answer(update,context):
             break
     reply_keyboard = [[text["back"][lang],text["menu"][lang]]]
     markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
-    update.message.reply_text(games[solution][language], reply_markup = markup)
+    update.message.reply_text(games[solution][language_answer], reply_markup = markup)
     return BACK_ANSWER
 
 def back_answer(update,context):
