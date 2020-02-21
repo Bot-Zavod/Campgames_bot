@@ -187,9 +187,9 @@ def final_answer(update,context):
     UM.currentUsers[update.message.chat.id].set_flag(7)
 
     solution = None
-    language = "en" if lang==1 else "ru"
+    language_answer = "en" if lang==1 else "ru"
     for key in names:
-        if massage == names[key][language]:
+        if massage == names[key][language_answer]:
             solution = key
             break
     reply_keyboard = [[text["back"][lang],text["menu"][lang]]]
