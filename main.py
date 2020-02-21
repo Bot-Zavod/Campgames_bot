@@ -22,9 +22,10 @@ init.init()
 # print(r"{}".format(link))
 # db = DbInterface(r"{}".format(link))
 # # C:\\Users\\Илон Маск\\Dropbox\\Programming_projects\\database.db
-db = DbInterface(r"D:\Dropbox\\Programming_projects\\Campgames_bot\\database.db")
+# "c:\\Users\\Vargan\\Dropbox\\Programming_projects\\Campgames_bot\\database.py"
+db = DbInterface(r"c:\\Users\\Vargan\\Dropbox\\Programming_projects\\Campgames_bot\\database.db")
 print(db)
-CHOOSE_LANG, CHECK_PASSWORD, ADMIN, GAMES, BACK, ASK_TYPE, ASK_AGE, ASK_AMOUNT, ASK_LOCATION, ASK_PROPS, RESULT, ANSWER,BACK_ANSWER = range(13)
+CHOOSE_LANG, CHECK_PASSWORD, ADMIN, GAMES, BACK, ASK_TYPE, ASK_AGE, ASK_AMOUNT, ASK_LOCATION, ASK_PROPS, RESULT, ANSWER,BACK_ANSWER, ADMIN_PASSWORD = range(14)
 
 UM = UserManager()
 
@@ -49,7 +50,7 @@ def game_start(update,context):
         return rand(update,context)
 
 def rand(update,context):
-    lang = UM.currentUsers[update.message.chat.id].lang
+    lang = language(update,context)
     reply_keyboard = [[text["back"][lang]]]
     markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
     update.message.reply_text(games[randint(1,53)]["en" if lang==1 else "ru"], reply_markup = markup)
@@ -63,7 +64,7 @@ def back(update,context):
 
 def a_type(update,context):
     UM.create_user(User(update.message.chat.id,update.message.chat.username))
-    lang = UM.currentUsers[update.message.chat.id].lang
+    lang = language(update,context)
 
     UM.currentUsers[update.message.chat.id].set_flag(1)
     reply_keyboard = [[text["team_building"][lang]],[text["ice_breaker"][lang]],[text["timefiller"][lang]],
@@ -73,7 +74,7 @@ def a_type(update,context):
     return ASK_AGE
 
 def a_age(update,context):
-    lang = UM.currentUsers[update.message.chat.id].lang
+    lang = language(update,context)
     massage = update.message.text
     if massage == text["team_building"][lang]:
         UM.currentUsers[update.message.chat.id].take_answer(0,0)
@@ -94,7 +95,7 @@ def a_age(update,context):
     return ASK_AMOUNT
 
 def a_amount(update,context):
-    lang = UM.currentUsers[update.message.chat.id].lang
+    lang = language(update,context)
     massage = update.message.text
     if massage == text["6-12"]:
         UM.currentUsers[update.message.chat.id].take_answer(1,0)
@@ -113,7 +114,7 @@ def a_amount(update,context):
     return ASK_LOCATION
 
 def a_location(update,context):
-    lang = UM.currentUsers[update.message.chat.id].lang
+    lang = language(update,context)
     massage = update.message.text
     if massage == text["up to 5"][lang]:
         UM.currentUsers[update.message.chat.id].take_answer(2,0)
@@ -134,7 +135,7 @@ def a_location(update,context):
     return ASK_PROPS
 
 def a_props(update,context):
-    lang = UM.currentUsers[update.message.chat.id].lang
+    lang = language(update,context)
     massage = update.message.text
     if massage == text["outside"][lang]:
         UM.currentUsers[update.message.chat.id].take_answer(3,0)
@@ -153,7 +154,7 @@ def a_props(update,context):
     return RESULT
 
 def result(update,context):
-    lang = UM.currentUsers[update.message.chat.id].lang
+    lang = language(update,context)
     massage = update.message.text
     if massage == text["no"][lang]:
         UM.currentUsers[update.message.chat.id].take_answer(4,0)
@@ -166,7 +167,7 @@ def result(update,context):
     UM.currentUsers[update.message.chat.id].set_flag(6)
 
     answer = UM.currentUsers[update.message.chat.id].answers
-    update.message.reply_text(answer)
+    # update.message.reply_text(answer)
     game_id = db.getGames(answer[0],answer[1],answer[2],answer[3],answer[4])
     buttons_language = "en" if lang==1 else "ru"
     reply_keyboard = [[names[i][buttons_language]] for i in game_id]
@@ -176,7 +177,7 @@ def result(update,context):
     return ANSWER
 
 def final_answer(update,context):
-    lang = UM.currentUsers[update.message.chat.id].lang
+    lang = language(update,context)
     massage = update.message.text
     if massage == text["back"][lang] and UM.currentUsers[update.message.chat.id].flag == 6:
         return a_props(update,context)
@@ -264,13 +265,13 @@ def admin(update, context):
         with open(FILENAME, "r") as file:
             PASSWORD = file.readline()
             file.close()
-        update.message.reply_text("Hi boss, current password is\n\n"+PASSWORD)
+        update.message.reply_text(text["hi_boss"][lang]+PASSWORD)
         reply_keyboard = [[text["yes"][lang],text["back"][lang]]]
         markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
-        update.message.reply_text("Would you like to change it?", reply_markup = markup)
+        update.message.reply_text(text["change"][lang], reply_markup = markup)
         return ADMIN
     else:
-        update.message.reply_text("You are not my boss, maybe later)")
+        update.message.reply_text(text["sorry"][lang])
         return start(update, context)
 
 def admin_password(update, context):
@@ -278,10 +279,19 @@ def admin_password(update, context):
     if update.message.text == text["back"][lang]:
         return start(update, context)
     elif update.message.text == text["yes"][lang]:
-        update.message.reply_text("Ok man, set the new PASSWORD")
+        update.message.reply_text(text["send_pass"][lang])
+        return ADMIN_PASSWORD
+
+def new_password(update, context):
+    lang = language(update,context)
+    FILENAME = "password.txt"
+    with open(FILENAME, "w") as file:
+        file.write(update.message.text)
+        file.close()
+    update.message.reply_text(text["new_pass"][lang]+update.message.text)
+    return admin(update, context)
 
 def done(update, context):
-
     update.message.reply_text('END')
     return ConversationHandler.END
 
@@ -296,32 +306,32 @@ def main():
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
-
-    # Add conversation handler with the states CHOOSE_LANG, ASK_AGE, ASK_AMOUNT, ASK_LOCATION, ASK_PROPSand START_QUERY
+    necessary_hendlers = [CommandHandler('stop', done),
+                          CommandHandler('start', start),
+                          CommandHandler('admin', admin),
+                          CommandHandler('language', ask_lang)]
+    # Add conversation handler with the states CHOOSE_LANG, ASK_AGE, ASK_AMOUNT, ASK_LOCATION, ASK_PROPS and START_QUERY
     conv_handler = ConversationHandler(
-        entry_points=[CommandHandler('start', start),
-                      CommandHandler('admin', admin)],
+        entry_points=[CommandHandler('start', start)],
 
         states={
-            ADMIN: [MessageHandler(Filters.text, admin_password)],
-            CHOOSE_LANG: [MessageHandler(Filters.text, set_lang)],
-            CHECK_PASSWORD: [MessageHandler(Filters.text, check_password)],
-            GAMES: [MessageHandler(Filters.text, game_start)],
-            BACK: [MessageHandler(Filters.text, back)],
-            ASK_TYPE: [MessageHandler(Filters.text, a_type)],
-            ASK_AGE: [MessageHandler(Filters.text, a_age)],
-            ASK_AMOUNT: [MessageHandler(Filters.text, a_amount)],
-            ASK_LOCATION: [MessageHandler(Filters.text, a_location)],
-            ASK_PROPS: [MessageHandler(Filters.text, a_props)],
-            RESULT: [MessageHandler(Filters.text, result)],
-            ANSWER: [MessageHandler(Filters.text, final_answer)],
-            BACK_ANSWER: [MessageHandler(Filters.text, back_answer)],
+            ADMIN: [MessageHandler(Filters.text, admin_password),*necessary_hendlers],
+            ADMIN_PASSWORD: [MessageHandler(Filters.text, new_password),*necessary_hendlers],
+            CHOOSE_LANG: [MessageHandler(Filters.text, set_lang),*necessary_hendlers],
+            CHECK_PASSWORD: [MessageHandler(Filters.text, check_password),*necessary_hendlers],
+            GAMES: [MessageHandler(Filters.text, game_start),*necessary_hendlers],
+            BACK: [MessageHandler(Filters.text, back),*necessary_hendlers],
+            ASK_TYPE: [MessageHandler(Filters.text, a_type),*necessary_hendlers],
+            ASK_AGE: [MessageHandler(Filters.text, a_age),*necessary_hendlers],
+            ASK_AMOUNT: [MessageHandler(Filters.text, a_amount),*necessary_hendlers],
+            ASK_LOCATION: [MessageHandler(Filters.text, a_location),*necessary_hendlers],
+            ASK_PROPS: [MessageHandler(Filters.text, a_props),*necessary_hendlers],
+            RESULT: [MessageHandler(Filters.text, result),*necessary_hendlers],
+            ANSWER: [MessageHandler(Filters.text, final_answer),*necessary_hendlers],
+            BACK_ANSWER: [MessageHandler(Filters.text, back_answer),*necessary_hendlers],
         },
 
-        fallbacks=[CommandHandler('stop', done),]
-                #    CommandHandler('start', start),
-                #    CommandHandler('admin', admin),
-                #    CommandHandler('language', ask_lang)]
+        fallbacks=[CommandHandler('stop', done)]
     )
 
     dp.add_handler(conv_handler)

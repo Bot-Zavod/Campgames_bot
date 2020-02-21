@@ -1,5 +1,5 @@
 from database import DbInterface
-db = DbInterface(r"D:\Dropbox\\Programming_projects\\Campgames_bot\\database.db")
+db = DbInterface(r"c:\\Users\\Vargan\\Dropbox\\Programming_projects\\Campgames_bot\\database.db")
 
 class UserManager:
 
@@ -28,7 +28,6 @@ class User:
     def __init__(self, chat_id, username):
         self.chat_id = chat_id
         self.username = username
-        self.flag = 1
         self.lang = db.getLang(self.chat_id)
         self.answers = [None,None,None,None,None]
 

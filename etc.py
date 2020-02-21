@@ -73,6 +73,17 @@ text = {
     "no":{1:"No",
           0:"Нет"},
     
+    #ADMIN
+    "hi_boss":{1:"Hi boss, current password is\n\n",
+               0:"Привет босс, пароль на сегодня\n\n"},
+    "change":{1:"Would you like to change it?",
+              0:"Хочешь изменить пароль?"},
+    "sorry":{1:"You are not my boss, maybe later...",
+             0:"Сорри, но не ты здесь босс..."},
+    "send_pass":{1:"Ok man, set the new PASSWORD",
+                0:"Хорошо, введи новый ПАРОЛЬ"},
+    "new_pass":{1:"New password is\n\n",
+                0:"Новый пароль\n\n"}            
 
                                   
 }
