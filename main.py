@@ -23,7 +23,7 @@ init.init()
 # db = DbInterface(r"{}".format(link))
 # # C:\\Users\\Илон Маск\\Dropbox\\Programming_projects\\database.db
 # "c:\\Users\\Vargan\\Dropbox\\Programming_projects\\Campgames_bot\\database.py"
-db = DbInterface(r"c:\\Users\\Vargan\\Dropbox\\Programming_projects\\Campgames_bot\\database.db")
+db = DbInterface(r"database.db")
 print(db)
 CHOOSE_LANG, CHECK_PASSWORD, ADMIN, GAMES, BACK, ASK_TYPE, ASK_AGE, ASK_AMOUNT, ASK_LOCATION, ASK_PROPS, RESULT, ANSWER,BACK_ANSWER, ADMIN_PASSWORD = range(14)
 
