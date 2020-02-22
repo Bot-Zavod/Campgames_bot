@@ -30,7 +30,7 @@ text = {
             0:"Любое 🤷‍♂️"},
     "menu":{1:"Menu 🎸",
             0:"Меню 🎸"},
-    "answer":{1:"Here is what I managed to find:,
+    "answer":{1:"Here is what I managed to find:",
               0:"Вот что мне удалось найти:"},   
 
     # ASK_TYPE
