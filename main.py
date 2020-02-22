@@ -184,7 +184,7 @@ def result(update,context):
     UM.currentUsers[update.message.chat.id].set_flag(6)
 
     game_id = get_games_id(update,context)
-    update.message.reply_text(game_id)
+    # update.message.reply_text(game_id)
     buttons_language = "en" if lang == 1 else "ru"
     reply_keyboard = [[names[i][buttons_language]] for i in game_id]
     reply_keyboard.append([text["back"][lang],text["menu"][lang]])
