@@ -35,6 +35,23 @@ def language(update,context):
         lang = 1
     return lang
 
+def get_games_id(update,context):
+    answer = UM.currentUsers[update.message.chat.id].answers
+    game_id = []
+    game_id += db.getGames(answer[0],answer[1],answer[2],answer[3],answer[4])
+
+    if None in answer:
+        keys = [[0,1,2],[0,1],[0,1,2],[0,1],[0,1]]
+        data = [answer[0],answer[1],answer[2],answer[3],answer[4]]
+        for j in range(5):
+            if answer[j] == None:
+                for i in keys[j]:
+                    data[j] = i
+                    game_id += db.getGames(*data)
+        game_id = sorted(list(set(game_id)))
+    
+    return game_id
+
 def start_query(update, context):
     lang = language(update,context)
     reply_keyboard = [[text["games"][lang]],[text["random"][lang]]]
@@ -166,9 +183,8 @@ def result(update,context):
         pass
     UM.currentUsers[update.message.chat.id].set_flag(6)
 
-    answer = UM.currentUsers[update.message.chat.id].answers
-    # update.message.reply_text(answer)
-    game_id = db.getGames(answer[0],answer[1],answer[2],answer[3],answer[4])
+    game_id = get_games_id(update,context)
+    update.message.reply_text(game_id)
     buttons_language = "en" if lang == 1 else "ru"
     reply_keyboard = [[names[i][buttons_language]] for i in game_id]
     reply_keyboard.append([text["back"][lang],text["menu"][lang]])

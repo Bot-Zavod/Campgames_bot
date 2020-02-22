@@ -5,7 +5,7 @@ class DbInterface:
         self.conn = sqlite3.connect(path, check_same_thread=False)
         self.cursor = self.conn.cursor()
 
-    def getGames(self, type, age=None, amount=None, location=None, props=None):
+    def getGames(self, type=None, age=None, amount=None, location=None, props=None):
         sql = "SELECT DISTINCT Id FROM Games WHERE "
         args = [type]
         sql += 'Type=?'
