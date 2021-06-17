@@ -1,38 +1,42 @@
 from database import DbInterface
+
 db = DbInterface(r"database.db")
 
+
 class UserManager:
+    """ manage iser during registration process """
 
     def __init__(self):
-        self.currentUsers = {}
+        self.current_users = {}
 
     def create_user(self, user):
-        if user.chat_id not in self.currentUsers:
-            self.currentUsers[user.chat_id] = user
+        if user.chat_id not in self.current_users:
+            self.current_users[user.chat_id] = user
         else:
-            print('ADDING EXISTING USER')
+            print("ADDING EXISTING USER")
 
     def delete_user(self, chat_id):
-        if chat_id in self.currentUsers:
-            del self.currentUsers[chat_id]
+        if chat_id in self.current_users:
+            del self.current_users[chat_id]
         else:
-            print(f'[WARNING]DELETING UNEXISTING USER {chat_id}')
+            print(f"[WARNING]DELETING UNEXISTING USER {chat_id}")
 
-    # Users stored in dictionary with keys as 
+    # Users stored in dictionary with keys as
     # Structure {
-    #   user_id: User-class object 
+    #   user_id: User-class object
     # }
     # chat_id
+
 
 class User:
     def __init__(self, chat_id, username):
         self.chat_id = chat_id
         self.username = username
-        self.lang = db.getLang(self.chat_id)
-        self.answers = [None,None,None,None,None]
+        self.lang = db.get_language(self.chat_id)
+        self.answers = [None, None, None, None, None]
 
     def __repr__(self):
-        return f'User {self.username} with chat id: {self.chat_id}'
+        return f"User {self.username} with chat id: {self.chat_id}"
 
     def set_lang(self, lang):
         self.lang = lang
@@ -42,6 +46,7 @@ class User:
 
     def take_answer(self, n, answer):
         self.answers[n] = answer
+
 
 # if __name__ == "__main__":
 #     user = User(100500)

@@ -1,0 +1,4 @@
+# Contains requirements common to all environments
+# install database layer
+-r database.txt
+python-telegram-bot==13.3

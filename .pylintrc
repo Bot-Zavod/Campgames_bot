@@ -1,0 +1,19 @@
+[MESSAGES CONTROL]
+disable=missing-module-docstring,
+        import-error,
+        fixme,
+        no-self-use,
+        unused-argument,
+        too-few-public-methods,
+        no-value-for-parameter,
+        line-too-long,
+        super-with-arguments,
+        broad-except,
+        no-member,
+        attribute-defined-outside-init,
+        relative-beyond-top-level,
+        wildcard-import,
+        too-many-return-statements,
+        missing-function-docstring
+[DESIGN]
+max-attributes=12
