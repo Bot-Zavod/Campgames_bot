@@ -1,4 +1,4 @@
-from database import DbInterface
+from .database import DbInterface
 
 db = DbInterface(r"database.db")
 

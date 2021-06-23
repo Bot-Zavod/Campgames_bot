@@ -1,13 +1,11 @@
 import logging
-from os import environ
-from os import getcwd
+import os
 from random import randint
 
-import init
-from database import DbInterface
-from etc import games
-from etc import names
-from etc import text
+from .database import DbInterface
+from .etc import games
+from .etc import names
+from .etc import text
 from telegram import ReplyKeyboardMarkup
 from telegram import ReplyKeyboardRemove
 from telegram.ext import CommandHandler
@@ -15,8 +13,10 @@ from telegram.ext import ConversationHandler
 from telegram.ext import Filters
 from telegram.ext import MessageHandler
 from telegram.ext import Updater
-from user import User
-from user import UserManager
+
+from dotenv import load_dotenv
+from .user import User
+from .user import UserManager
 
 # Enable logging
 logging.basicConfig(
@@ -25,7 +25,7 @@ logging.basicConfig(
 
 logger = logging.getLogger(__name__)
 
-init.init()
+load_dotenv()
 
 # link = getcwd().split("\\")
 # link = link[:-1]
@@ -401,7 +401,7 @@ def error(update, context):
 
 
 def main():
-    updater = Updater(environ["bot_token"], use_context=True)
+    updater = Updater(os.getenv("BOT_TOKEN"), use_context=True)
 
     # Get the dispatcher to register handlers
     dp = updater.dispatcher
