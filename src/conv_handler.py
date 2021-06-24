@@ -39,7 +39,7 @@ conversation_handler = ConversationHandler(
         ],
         State.ADMIN_PASSWORD: [MessageHandler(Filters.text, new_password)],
         State.CHOOSE_LANG: [
-            MessageHandler(Filters.text(text["lang"].values()), set_lang)
+            MessageHandler(Filters.text(text["langs"].values()), set_lang)
         ],
         State.CHECK_PASSWORD: [MessageHandler(Filters.text, check_password)],
         # GAMES #

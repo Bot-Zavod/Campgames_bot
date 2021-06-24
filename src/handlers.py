@@ -73,7 +73,7 @@ def rand(update: Update, context: CallbackContext):
 
 def ask_lang(update: Update, context: CallbackContext):
     lang = get_language(update, context)
-    reply_keyboard = [[text["lang"][0]], [text["lang"][1]]]
+    reply_keyboard = [[text["langs"][0]], [text["langs"][1]]]
     markup = ReplyKeyboardMarkup(
         reply_keyboard, one_time_keyboard=True, resize_keyboard=True
     )
@@ -82,7 +82,7 @@ def ask_lang(update: Update, context: CallbackContext):
 
 
 def set_lang(update: Update, context: CallbackContext):
-    langs = {text["lang"][0]: 0, text["lang"][1]: 1}
+    langs = {text["langs"][0]: 0, text["langs"][1]: 1}
     lang = langs[update.message.text]
     lang += 1  # ! need fix
 
