@@ -1,12 +1,14 @@
-text = {
+from typing import Dict
+
+
+text: Dict[str, Dict[int, str]] = {
     "start": {
         1: "Hello\nI am Camp Games bot!\nI will help you to find a game for any occasion!",
         0: "Привет\nЯ - Camp Games бот!\nЯ помогу тебе найти игру на любой случай!",
     },
     # LANGUAGE
     "ask_lang": {1: "Choose the language below:", 0: "Выбери язык:"},
-    "en": "English 🇬🇧",
-    "ru": "Русский 🇷🇺",
+    "langs": {1: "English 🇬🇧", 0: "Русский 🇷🇺"},
     # PASSWORD
     "ask_pass": {
         1: "To enter, write me a password 🔏",
@@ -35,13 +37,13 @@ text = {
     "timefiller": {1: "Timefillers", 0: "Таймфиллеры"},
     # ASK_AGE
     "ask_age": {1: "How old are the children?", 0: "Какой возраст детей?"},
-    "6-12": "6-12",
-    "12+": "12+",
+    "6-12": {1: "6-12", 0: "6-12"},
+    "12+": {1: "12+", 0: "12+"},
     # ASK_AMOUNT
     "ask_amount": {1: "How many kids do you have?", 0: "Сколько детей?"},
     "up to 5": {1: "up to 5", 0: "до 5"},
-    "5-20": "5-20",
-    "20+": "20+",
+    "5-20": {1: "5-20", 0: "5-20"},
+    "20+": {1: "20+", 0: "20+"},
     # ASK_LOCATION
     "ask_location": {1: "Where are you?", 0: "Где вы находитесь?"},
     "inside": {1: "Inside", 0: "В помещении"},
@@ -65,7 +67,7 @@ text = {
 }
 
 
-games = {
+games: Dict[int, Dict[str, str]] = {
     # ______________
     # TEAMBUILDINGS
     # ______________
@@ -1166,7 +1168,3 @@ names = {
         "ru": """Великаны, волшебники, эльфы""",
     },
 }
-
-lang = "ru"
-if __name__ == "__main__":
-    print(text)

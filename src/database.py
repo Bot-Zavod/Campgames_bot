@@ -8,9 +8,11 @@ class DbInterface:
         self.conn = sqlite3.connect(path, check_same_thread=False)
         self.cursor = self.conn.cursor()
 
-    def get_games(self, type=None, age=None, amount=None, location=None, props=None):
+    def get_games(
+        self, game_type=None, age=None, amount=None, location=None, props=None
+    ):
         sql = "SELECT DISTINCT Id FROM Games WHERE "
-        args = [type]
+        args = [game_type]
         sql += "Type=?"
         if age is not None:
             sql += "AND (Age=? OR Age is NULL)"
@@ -49,9 +51,9 @@ class DbInterface:
         sql = "SELECT EXISTS(SELECT * from Users Where Chat_id = ?)"
         args = [chat_id]
         self.cursor.execute(sql, args)
-        return True if self.cursor.fetchall()[0][0] == 1 else False
+        return self.cursor.fetchall()[0][0] == 1
 
-    def setLang(self, chat_id, lang):
+    def set_language_database(self, chat_id, lang):
         sql = "INSERT OR REPLACE INTO Lang (Chat_id, lang) VALUES (?, ?)"
         args = [chat_id, lang]
         try:
@@ -81,8 +83,10 @@ class DbInterface:
         return self.cursor.fetchall()[0][0]
 
 
+db_interface = DbInterface(r"database.db")
+
 # print(get_games(0,0,0,0,0))
-# DbInterface('database.db').setLang(10,2)
+# DbInterface('database.db').set_language_database(10,2)
 # print(DbInterface('database.db').get_language(10))
 # authorize_user()
 # print(check_user(100))

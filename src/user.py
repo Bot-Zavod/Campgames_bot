@@ -1,38 +1,15 @@
 from .database import DbInterface
 
-db = DbInterface(r"database.db")
-
-
-class UserManager:
-    """ manage iser during registration process """
-
-    def __init__(self):
-        self.current_users = {}
-
-    def create_user(self, user):
-        if user.chat_id not in self.current_users:
-            self.current_users[user.chat_id] = user
-        else:
-            print("ADDING EXISTING USER")
-
-    def delete_user(self, chat_id):
-        if chat_id in self.current_users:
-            del self.current_users[chat_id]
-        else:
-            print(f"[WARNING]DELETING UNEXISTING USER {chat_id}")
-
-    # Users stored in dictionary with keys as
-    # Structure {
-    #   user_id: User-class object
-    # }
-    # chat_id
+db_interface = DbInterface(r"database.db")
 
 
 class User:
+    """ Telegram user """
+
     def __init__(self, chat_id, username):
         self.chat_id = chat_id
         self.username = username
-        self.lang = db.get_language(self.chat_id)
+        self.lang = db_interface.get_language(self.chat_id)
         self.answers = [None, None, None, None, None]
 
     def __repr__(self):
@@ -44,8 +21,8 @@ class User:
     def set_flag(self, flag):
         self.flag = flag
 
-    def take_answer(self, n, answer):
-        self.answers[n] = answer
+    def take_answer(self, question_num, answer):
+        self.answers[question_num] = answer
 
 
 # if __name__ == "__main__":
