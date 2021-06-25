@@ -12,7 +12,7 @@ meta = MetaData(  # automatically name constraints to simplify migrations
     naming_convention={
         "ix": "ix_%(column_0_label)s",
         "uq": "uq_%(table_name)s_%(column_0_name)s",
-        "ck": "ck_%(table_name)s_%(constraint_name)s",
+        "ck": "ck_%(table_name)s_%(column_0_name)s",
         "fk": "fk_%(table_name)s_%(column_0_name)s_%(referred_table_name)s",
         "pk": "pk_%(table_name)s",
     }
@@ -40,13 +40,13 @@ class User(Base):
 class Game(Base):
     """ game for children """
 
-    __tablename__ = "user_action"
+    __tablename__ = "game"
 
     id = Column(Integer, primary_key=True)
     name_ru = Column(String)
     name_en = Column(String)
     description_ru = Column(String)
-    description_ru = Column(String)
+    description_en = Column(String)
 
     game_type = Column(String)
     kids_age = Column(String)

@@ -1,4 +1,3 @@
-import logging
 from random import randint
 
 from telegram import ReplyKeyboardMarkup
@@ -10,15 +9,9 @@ from telegram.ext import ConversationHandler
 from .database import db_interface
 from .etc import games
 from .etc import text
+from .logs import logger
 from .states_range import State
 from .utils import get_language
-
-
-# Enable logging
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-)
-logger = logging.getLogger(__name__)
 
 
 def start(update: Update, context: CallbackContext):

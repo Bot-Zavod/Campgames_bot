@@ -6,12 +6,11 @@ from telegram import Update
 from telegram.ext import CallbackContext
 
 from .database import db_interface
-from .etc import games
-from .etc import names
 from .etc import text
 from .handlers import start_query
+from .logs import logger
 from .states_range import State
-from .user import User
+from .user_manager import User
 from .user_manager import user_manager
 from .utils import get_language
 from .utils import send_msg_with_keyboard
@@ -152,30 +151,29 @@ def read_props(update: Update, context: CallbackContext):
 
 def result(update: Update, context: CallbackContext):
     lang = get_language(update, context)
-    game_id = get_games_id(update, context)
-    # update.message.reply_text(game_id)
-    buttons_language = "en" if lang == 1 else "ru"
-    reply_keyboard = [[names[i][buttons_language]] for i in game_id]
+    answers = user_manager.current_users[update.message.chat.id].answers
+
+    logger.info("Got answers '%'", answers)
+
+    games = db_interface.get_games(*answers)
+
+    reply_keyboard = [[game_name[lang + 1]] for game_name in games]
     reply_keyboard.append([text["back"][lang], text["menu"][lang]])
     send_msg_with_keyboard(update, text["answer"][lang], reply_keyboard)
     return State.ANSWER
 
 
 def get_games_id(update: Update, context: CallbackContext):
-    answer = user_manager.current_users[update.message.chat.id].answers
-    game_id = []
-    game_id += db_interface.get_games(
-        answer[0], answer[1], answer[2], answer[3], answer[4]
-    )
+    answers = user_manager.current_users[update.message.chat.id].answers
+    game_id = db_interface.get_games(*answers)
 
-    if None in answer:
+    if None in answers:
         keys = [[0, 1, 2], [0, 1], [0, 1, 2], [0, 1], [0, 1]]
-        data = [answer[0], answer[1], answer[2], answer[3], answer[4]]
         for j in range(5):
-            if not answer[j]:
+            if answer[j] is None:
                 for i in keys[j]:
-                    data[j] = i
-                    game_id += db_interface.get_games(*data)
+                    answers[j] = i
+                    game_id += db_interface.get_games(*answers)
         game_id = sorted(list(set(game_id)))
 
     return game_id
