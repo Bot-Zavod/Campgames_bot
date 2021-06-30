@@ -1,10 +1,11 @@
 from functools import wraps
 from os import path
-from .models import Base
 
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import sessionmaker
+
+from .models import Base
 
 
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
@@ -45,4 +46,5 @@ def local_session(function):
             raise ValueError(error) from error  # notify developer
         session.close()
         return result
+
     return wrapped

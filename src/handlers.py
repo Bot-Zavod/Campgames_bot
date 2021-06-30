@@ -1,5 +1,3 @@
-from random import randint
-
 from telegram import ReplyKeyboardMarkup
 from telegram import ReplyKeyboardRemove
 from telegram import Update
@@ -7,41 +5,41 @@ from telegram.ext import CallbackContext
 from telegram.ext import ConversationHandler
 
 from .database import db_interface
-from .etc import games
 from .etc import text
 from .logs import logger
 from .states_range import State
-from .utils import get_language
 
 
 def start(update: Update, context: CallbackContext):
+    """ check if user is authorized and have language """
     chat_id = update.message.chat.id
-    lang = get_language(update, context)
+    lang = db_interface.get_language(chat_id)
 
-    update.message.reply_text(text["start"][lang], reply_markup=ReplyKeyboardRemove())
-    db_lang = db_interface.get_language(chat_id)
-    if db_lang is None:
+    if not lang:
         return ask_lang(update, context)
     if not db_interface.check_user(chat_id):
         return ask_password(update, context)
+
+    update.message.reply_text(text["start"][lang], reply_markup=ReplyKeyboardRemove())
     return start_query(update, context)
 
 
 def ask_password(update: Update, context: CallbackContext):
-    lang = get_language(update, context)
+    chat_id = update.message.chat.id
+    lang = db_interface.get_language(chat_id)
     update.message.reply_text(text["ask_pass"][lang])
     return State.CHECK_PASSWORD
 
 
 def check_password(update: Update, context: CallbackContext):
-    lang = get_language(update, context)
-    file_name = r"password.txt"
-    with open(file_name, "r") as file:
+    chat_id = update.message.chat.id
+    lang = db_interface.get_language(chat_id)
+    with open("password.txt", "r") as file:
         password = file.readline()
         file.close()
 
     if update.message.text == password:
-        db_interface.authorize_user(update.message.chat_id)
+        db_interface.authorize_user(chat_id)
         update.message.reply_text(text["pass_success"][lang])
         return start_query(update, context)
 
@@ -50,7 +48,7 @@ def check_password(update: Update, context: CallbackContext):
 
 
 def start_query(update: Update, context: CallbackContext):
-    lang = get_language(update, context)
+    lang = db_interface.get_language(update.message.chat.id)
     reply_keyboard = [[text["games"][lang]], [text["random"][lang]]]
     markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
     update.message.reply_text(text["start_games"][lang], reply_markup=markup)
@@ -58,28 +56,32 @@ def start_query(update: Update, context: CallbackContext):
 
 
 def rand(update: Update, context: CallbackContext):
-    lang = get_language(update, context)
-    random_game = games[randint(1, 53)]["en" if lang == 1 else "ru"]
+    lang = db_interface.get_language(update.message.chat.id)
+    random_game = db_interface.get_random_game_description(lang)
     update.message.reply_text(random_game)
-    return start_query(update, context)
 
 
 def ask_lang(update: Update, context: CallbackContext):
-    lang = get_language(update, context)
     reply_keyboard = [[text["langs"][0]], [text["langs"][1]]]
     markup = ReplyKeyboardMarkup(
         reply_keyboard, one_time_keyboard=True, resize_keyboard=True
     )
+    lang = db_interface.get_language(update.message.chat.id)
+    lang = lang if lang else 1
     update.message.reply_text(text["ask_lang"][lang], reply_markup=markup)
     return State.CHOOSE_LANG
 
 
 def set_lang(update: Update, context: CallbackContext):
-    langs = {text["langs"][0]: 0, text["langs"][1]: 1}
-    lang = langs[update.message.text]
-    lang += 1  # ! need fix
+    chat_id = update.message.chat.id
 
-    if not db_interface.check_user(update.message.chat_id):
+    langs = {text["langs"][0]: 0, text["langs"][1]: 1}
+    lang = langs.get(update.message.text, None)
+    if lang is None:
+        return ask_lang(update, context)
+    db_interface.set_language(chat_id, lang)
+
+    if not db_interface.check_user(chat_id):
         return ask_password(update, context)
     return start(update, context)
 

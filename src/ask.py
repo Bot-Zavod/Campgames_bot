@@ -8,7 +8,6 @@ from telegram.ext import CallbackContext
 from .database import db_interface
 from .etc import text
 from .handlers import start_query
-from .logs import logger
 from .states_range import State
 from .user_manager import User
 from .user_manager import user_manager
@@ -152,31 +151,12 @@ def read_props(update: Update, context: CallbackContext):
 def result(update: Update, context: CallbackContext):
     lang = get_language(update, context)
     answers = user_manager.current_users[update.message.chat.id].answers
-
-    logger.info("Got answers '%'", answers)
-
-    games = db_interface.get_games(*answers)
+    games = db_interface.get_game_names(*answers)
 
     reply_keyboard = [[game_name[lang + 1]] for game_name in games]
     reply_keyboard.append([text["back"][lang], text["menu"][lang]])
     send_msg_with_keyboard(update, text["answer"][lang], reply_keyboard)
     return State.ANSWER
-
-
-def get_games_id(update: Update, context: CallbackContext):
-    answers = user_manager.current_users[update.message.chat.id].answers
-    game_id = db_interface.get_games(*answers)
-
-    if None in answers:
-        keys = [[0, 1, 2], [0, 1], [0, 1, 2], [0, 1], [0, 1]]
-        for j in range(5):
-            if answer[j] is None:
-                for i in keys[j]:
-                    answers[j] = i
-                    game_id += db_interface.get_games(*answers)
-        game_id = sorted(list(set(game_id)))
-
-    return game_id
 
 
 def final_answer(update: Update, context: CallbackContext):
@@ -190,12 +170,7 @@ def final_answer(update: Update, context: CallbackContext):
         return start_query(update, context)
     user_manager.current_users[chat_id].set_flag(7)
 
-    solution = 0
-    language_answer = "en" if lang == 1 else "ru"
-    for key in names:
-        if massage == names[key][language_answer]:
-            solution = key
-            break
+    description = db_interface.get_game_description(massage, lang)
     reply_keyboard = [[text["back"][lang], text["menu"][lang]]]
-    send_msg_with_keyboard(update, games[solution][language_answer], reply_keyboard)
+    send_msg_with_keyboard(update, description, reply_keyboard)
     return State.BACK_ANSWER
