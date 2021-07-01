@@ -15,7 +15,7 @@ def start(update: Update, context: CallbackContext):
     chat_id = update.message.chat.id
     lang = db_interface.get_language(chat_id)
 
-    if not lang:
+    if lang is None:
         return ask_lang(update, context)
     if not db_interface.check_user(chat_id):
         return ask_password(update, context)
@@ -27,7 +27,9 @@ def start(update: Update, context: CallbackContext):
 def ask_password(update: Update, context: CallbackContext):
     chat_id = update.message.chat.id
     lang = db_interface.get_language(chat_id)
-    update.message.reply_text(text["ask_pass"][lang])
+    update.message.reply_text(
+        text["ask_pass"][lang], reply_markup=ReplyKeyboardRemove()
+    )
     return State.CHECK_PASSWORD
 
 
@@ -35,8 +37,7 @@ def check_password(update: Update, context: CallbackContext):
     chat_id = update.message.chat.id
     lang = db_interface.get_language(chat_id)
     with open("password.txt", "r") as file:
-        password = file.readline()
-        file.close()
+        password = file.readline().strip()
 
     if update.message.text == password:
         db_interface.authorize_user(chat_id)
@@ -67,7 +68,6 @@ def ask_lang(update: Update, context: CallbackContext):
         reply_keyboard, one_time_keyboard=True, resize_keyboard=True
     )
     lang = db_interface.get_language(update.message.chat.id)
-    lang = lang if lang else 1
     update.message.reply_text(text["ask_lang"][lang], reply_markup=markup)
     return State.CHOOSE_LANG
 
