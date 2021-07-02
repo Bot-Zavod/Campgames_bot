@@ -6,6 +6,7 @@ from .database import db_interface
 from .etc import text
 from .handlers import start
 from .utils import State
+from .utils import update_games_in_db
 
 
 def admin(update: Update, context: CallbackContext):
@@ -14,16 +15,23 @@ def admin(update: Update, context: CallbackContext):
     if str(update.message.chat.username) in ("V_vargan", "lisatkachenko"):
         with open("password.txt", "r") as file:
             password = file.readline()
-
-        update.message.reply_text(text["hi_boss"][lang] + password)
-
-        reply_keyboard = [[text["yes"][lang], text["back"][lang]]]
+        reply_keyboard = [
+            [text["update"][lang], text["change_password"][lang]],
+            [text["back"][lang]],
+        ]
         markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
-        update.message.reply_text(text["change"][lang], reply_markup=markup)
+        update.message.reply_text(text["hi_boss"][lang] + password, reply_markup=markup)
         return State.ADMIN
 
     update.message.reply_text(text["sorry"][lang])
     return start(update, context)
+
+
+def update_games(update: Update, context: CallbackContext):
+    chat_id = update.message.chat.id
+    lang = db_interface.get_language(chat_id)
+    update_games_in_db()
+    update.message.reply_text(text["sorry"][lang])
 
 
 def admin_password(update: Update, context: CallbackContext):

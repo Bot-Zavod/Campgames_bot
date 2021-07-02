@@ -6,6 +6,7 @@ from telegram.ext import MessageHandler
 from .admin import admin
 from .admin import admin_password
 from .admin import new_password
+from .admin import update_games
 from .ask import ask_type
 from .ask import final_answer
 from .ask import read_age
@@ -35,7 +36,10 @@ conversation_handler = ConversationHandler(
         # ADMIN #
         State.ADMIN: [
             MessageHandler(Filters.text(text["back"].values()), start),
-            MessageHandler(Filters.text(text["yes"].values()), admin_password),
+            MessageHandler(
+                Filters.text(text["change_password"].values()), admin_password
+            ),
+            MessageHandler(Filters.text(text["update"].values()), update_games),
         ],
         State.ADMIN_PASSWORD: [MessageHandler(Filters.text, new_password)],
         State.CHOOSE_LANG: [

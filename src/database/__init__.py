@@ -75,6 +75,46 @@ class DBSession:
         return game[0]
 
     @local_session
+    def get_all_games(self, session) -> list:
+        games = session.query(
+            Game.name_ru,
+            Game.name_en,
+            Game.description_ru,
+            Game.description_en,
+            Game.game_type,
+            Game.kids_age,
+            Game.kids_amount,
+            Game.location,
+            Game.props,
+        ).all()
+        return games
+
+    @local_session
+    def delete_games(self, session) -> int:
+        num_rows_deleted = session.query(Game).delete()
+        session.commit()
+        return num_rows_deleted
+
+    @local_session
+    def set_games(self, session, games: list):
+        objects = [
+            Game(
+                name_ru=game[0],
+                name_en=game[1],
+                description_ru=game[2],
+                description_en=game[3],
+                game_type=game[4],
+                kids_age=game[5],
+                kids_amount=game[6],
+                location=game[7],
+                props=game[8],
+            )
+            for game in games
+        ]
+        session.bulk_save_objects(objects)
+        session.commit()
+
+    @local_session
     def authorize_user(self, session, chat_id: int) -> User:
         user = session.query(User).get(chat_id)
         if not user:

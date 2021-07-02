@@ -3,49 +3,47 @@ import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
-from .database import DB
+from ..database import db_interface
 
 # check this, in case you are not
 # familiar with google spreadsheets
 # https://github.com/burnash/gspread
 
 
-def spreadsheet(tab: int) -> object:
+def spreadsheet() -> object:
     """ return one of two spreadsheets """
-    if tab == 0:
-        table = os.getenv("GAMES")
-    elif tab == 1:
-        table = os.getenv("PAYMENTS")
-    else:
-        return "fuck you"
 
     scope = [
         "https://spreadsheets.google.com/feeds",
         "https://www.googleapis.com/auth/drive",
     ]
-    path = "Vargan-API.json"
+    path = "google_api.json"
     full_path = os.path.abspath(os.path.expanduser(os.path.expandvars(path)))
     creds = ServiceAccountCredentials.from_json_keyfile_name(full_path, scope)
     client = gspread.authorize(creds)
+    table = os.getenv("GAMES_TABLE_KEY")
+    # If you want to be specific, use a key (which can be extracted from
+    # the spreadsheet's url)
     sheet = client.open_by_key(table)
-    sheet = sheet.get_worksheet(0)
-    return sheet
+    # Select worksheet by index. Worksheet indexes start from zero
+    worksheet = sheet.get_worksheet(0)
+    return worksheet
 
 
-# update Games database from Content spreadsheet
-def update_games():
+def update_spreadsheet_from_db():
+    worksheet = spreadsheet()
+    games = db_interface.get_all_games()
+    worksheet.update(f"A2:I{len(games)+1}", games)  # except headings
+
+
+def update_games_in_db():
     """ drops bd and write data from spreadsheet """
-    sheet = spreadsheet(0)
-    games = sheet.get_all_values()
-    games_num = len(games)
+    worksheet = spreadsheet()
+    games = worksheet.get_all_values()
+    # update_spreadsheet_from_db()
     try:
-        DB.delete_games()
-        games_to_insert = [[game[-1].strip()] + game[:5] for game in games]
-        DB.set_games(games_to_insert)
+        num_rows_deleted = db_interface.delete_games()
+        db_interface.set_games(games[1:])
     except Exception as error:
         return "Failed with " + str(error)
-    return f"Games database was succesfully updated with {games_num} games"
-
-
-if __name__ == "__main__":
-    print(update_games())
+    return f"Deleted {num_rows_deleted} rows\nAdded {len(games)} rows"
