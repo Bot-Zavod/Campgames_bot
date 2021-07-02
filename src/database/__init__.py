@@ -57,14 +57,11 @@ class DBSession:
     def get_game_description(self, session, name: str, lang_ru: int = 0) -> str:
         """returns game description by it's name and lang"""
 
-        if not lang_ru:
-            description = (
-                session.query(Game.description_ru).filter(Game.name_ru == name).first()
-            )
-        description = (
-            session.query(Game.description_en).filter(Game.name_en == name).first()
-        )
-
+        game_data = (
+            [Game.description_ru, Game.name_ru],
+            [Game.description_en, Game.name_en],
+        )[lang_ru]
+        description = session.query(game_data[0]).filter(game_data[1] == name).first()
         return description[0] if description else ""
 
     @local_session

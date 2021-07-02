@@ -22,7 +22,7 @@ from .handlers import set_lang
 from .handlers import start
 from .handlers import start_query
 from .handlers import stop_bot
-from .states_range import State
+from .utils import State
 
 
 conversation_handler = ConversationHandler(

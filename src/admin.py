@@ -2,19 +2,18 @@ from telegram import ReplyKeyboardMarkup
 from telegram import Update
 from telegram.ext import CallbackContext
 
+from .database import db_interface
 from .etc import text
 from .handlers import start
-from .states_range import State
-from .utils import get_language
+from .utils import State
 
 
 def admin(update: Update, context: CallbackContext):
-    lang = get_language(update, context)
+    chat_id = update.message.chat.id
+    lang = db_interface.get_language(chat_id)
     if str(update.message.chat.username) in ("V_vargan", "lisatkachenko"):
-        file_name = r"password.txt"
-        with open(file_name, "r") as file:
+        with open("password.txt", "r") as file:
             password = file.readline()
-            file.close()
 
         update.message.reply_text(text["hi_boss"][lang] + password)
 
@@ -28,13 +27,15 @@ def admin(update: Update, context: CallbackContext):
 
 
 def admin_password(update: Update, context: CallbackContext):
-    lang = get_language(update, context)
+    chat_id = update.message.chat.id
+    lang = db_interface.get_language(chat_id)
     update.message.reply_text(text["send_pass"][lang])
     return State.ADMIN_PASSWORD
 
 
 def new_password(update: Update, context: CallbackContext):
-    lang = get_language(update, context)
+    chat_id = update.message.chat.id
+    lang = db_interface.get_language(chat_id)
     with open("password.txt", "w") as file:
         file.write(update.message.text)
     update.message.reply_text(text["new_pass"][lang] + update.message.text)

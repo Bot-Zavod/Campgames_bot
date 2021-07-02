@@ -6,8 +6,8 @@ from telegram.ext import ConversationHandler
 
 from .database import db_interface
 from .etc import text
-from .logs import logger
-from .states_range import State
+from .utils import logger
+from .utils import State
 
 
 def start(update: Update, context: CallbackContext):

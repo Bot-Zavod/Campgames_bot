@@ -1,6 +1,6 @@
 from typing import Dict
 
-from .database import db_interface
+from ..database import db_interface
 
 
 class User:
