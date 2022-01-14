@@ -2,17 +2,23 @@ import os
 
 
 PASSWORD_FILE = os.path.join("data", "password.txt")
+DEFAULT_PASSWORD = "2222"
 
 
 def get_password() -> str:
-    with open(PASSWORD_FILE, "r") as file:
-        password = file.readline().strip()
-    return password
+    if os.path.exists(PASSWORD_FILE):
+        with open(PASSWORD_FILE, "r") as file:
+            password = file.readline().strip()
+        return password
+    return DEFAULT_PASSWORD
 
 
 def validate_password(possible_password: str) -> bool:
-    with open(PASSWORD_FILE, "r") as file:
-        password = file.readline().strip()
+    if os.path.exists(PASSWORD_FILE):
+        with open(PASSWORD_FILE, "r") as file:
+            password = file.readline().strip()
+    else:
+        password = DEFAULT_PASSWORD
     return possible_password == password
 
 

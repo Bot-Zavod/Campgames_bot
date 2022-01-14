@@ -133,3 +133,4 @@ database.sqlite
 .DS_Store
 .vscode/*
 *.pickle
+data/password.txt
