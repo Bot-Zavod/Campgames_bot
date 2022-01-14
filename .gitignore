@@ -132,3 +132,4 @@ google_api.json
 database.sqlite
 .DS_Store
 .vscode/*
+*.pickle

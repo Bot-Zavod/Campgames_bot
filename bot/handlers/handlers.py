@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from loguru import logger
 from telegram import ReplyKeyboardMarkup
 from telegram import ReplyKeyboardRemove
@@ -15,6 +17,7 @@ from bot.utils.logs import log_message
 
 def start(update: Update, context: CallbackContext):
     """check if user is authorized and have language"""
+
     log_message(update)
     chat_id = update.message.chat.id
     lang = db_interface.get_language(chat_id)
@@ -39,12 +42,6 @@ def stop_bot(update: Update, context: CallbackContext):
     log_message(update)
     update.message.reply_text("END")
     return ConversationHandler.END
-
-
-def error(update: Update, context: CallbackContext):
-    """Log Errors caused by Updates."""
-    log_message(update)
-    logger.warning(f'Update "{update}" caused error "{context.error}"')
 
 
 ################################
@@ -104,3 +101,32 @@ def check_password(update: Update, context: CallbackContext):
 
     update.message.reply_text(text["pass_wrong"][lang])
     return State.CHECK_PASSWORD
+
+
+################################
+###### UTILS ################
+################################
+
+
+def check_id(update: Update, context: CallbackContext):
+    """return user id"""
+
+    log_message(update)
+    chat_id = update.message.chat.id
+    update.message.reply_text(text=f"chat_id: {chat_id}")
+
+
+def check_time(update: Update, context: CallbackContext):
+    """return current server time"""
+
+    log_message(update)
+    kiev_now = datetime.now()
+    update.message.reply_text(
+        f"Current server time\n{str(kiev_now)}",
+    )
+
+
+def error(update: Update, context: CallbackContext):
+    """Log Errors caused by Updates."""
+    log_message(update)
+    logger.warning(f'Update "{update}" caused error "{context.error}"')

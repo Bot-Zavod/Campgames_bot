@@ -51,7 +51,8 @@ def read_answer(
         massage == text["back"][lang]
         and user_manager.current_users[chat_id].flag == current_flag - 1
     ):
-        return start_query
+        return start_query(update, context)
+
     user_manager.current_users[chat_id].set_flag(current_flag)
 
     answer_id = get_answer_id(massage, lang)

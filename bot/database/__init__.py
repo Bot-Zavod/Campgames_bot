@@ -11,7 +11,7 @@ from .models import User
 
 
 class DBSession:
-    """ connection to db """
+    """connection to db"""
 
     @local_session
     def get_game_names(
@@ -23,7 +23,7 @@ class DBSession:
         location=None,
         props=None,
     ) -> list:
-        """ list of games by requested parameters """
+        """list of games by requested parameters"""
 
         games = session.query(Game.id, Game.name_ru, Game.name_en)
 
@@ -91,9 +91,10 @@ class DBSession:
 
     @local_session
     def delete_games(self, session) -> int:
-        num_rows_deleted = session.query(Game).delete()
+        games_count = session.query(Game).count()
+        session.query(Game).delete()
         session.commit()
-        return num_rows_deleted
+        return games_count
 
     @local_session
     def set_games(self, session, games: list):

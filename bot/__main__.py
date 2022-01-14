@@ -14,6 +14,8 @@ from bot.commands import set_bot_commands
 from bot.conv_handler import conversation_handler
 from bot.handlers import admin
 from bot.handlers import ask_lang
+from bot.handlers import check_id
+from bot.handlers import check_time
 from bot.handlers import error
 from bot.handlers import stop_bot
 
@@ -66,6 +68,9 @@ def main():
     dispatcher.add_handler(CommandHandler("admin", admin))
     dispatcher.add_handler(CommandHandler("language", ask_lang))
     dispatcher.add_error_handler(error)
+    # debug tools
+    dispatcher.add_handler(CommandHandler("id", check_id))
+    dispatcher.add_handler(CommandHandler("time", check_time))
 
     updater.start_polling()
     updater.idle()

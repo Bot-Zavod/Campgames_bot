@@ -12,7 +12,9 @@ from .ask import read_type
 from .ask import result
 from .handlers import ask_lang
 from .handlers import ask_password
+from .handlers import check_id
 from .handlers import check_password
+from .handlers import check_time
 from .handlers import error
 from .handlers import rand
 from .handlers import set_lang

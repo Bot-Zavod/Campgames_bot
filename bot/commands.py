@@ -1,8 +1,6 @@
 """ Commands interface """
 from loguru import logger
 from telegram import Bot
-from telegram import BotCommandScopeAllChatAdministrators
-from telegram import BotCommandScopeAllGroupChats
 from telegram import BotCommandScopeAllPrivateChats
 from telegram import BotCommandScopeChat
 
@@ -12,9 +10,7 @@ from bot.admins import ADMINS
 def clear_bot(bot: Bot):
     """deletes previous commands"""
 
-    bot.delete_my_commands(BotCommandScopeAllPrivateChats())
-    bot.delete_my_commands(BotCommandScopeAllGroupChats())
-    bot.delete_my_commands(BotCommandScopeAllChatAdministrators())
+    bot.delete_my_commands()
     logger.debug("User commands were cleared.")
 
 

@@ -40,7 +40,8 @@ def update_games_in_db():
     """drops bd and write data from spreadsheet"""
     worksheet = spreadsheet()
     games = worksheet.get_all_values()
+    games = games[1:]  # remove header
     # update_spreadsheet_from_db()
     num_rows_deleted = db_interface.delete_games()
-    db_interface.set_games(games[1:])
+    db_interface.set_games(games)
     return num_rows_deleted, len(games)
