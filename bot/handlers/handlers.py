@@ -5,8 +5,9 @@ from telegram import Update
 from telegram.ext import CallbackContext
 from telegram.ext import ConversationHandler
 
+from bot.data import text
 from bot.database import db_interface
-from bot.etc import text
+from bot.handlers.utils import start_query
 from bot.password import validate_password
 from bot.utils import State
 from bot.utils.logs import log_message
@@ -27,42 +28,28 @@ def start(update: Update, context: CallbackContext):
     return start_query(update, context)
 
 
-def ask_password(update: Update, context: CallbackContext):
-    chat_id = update.message.chat.id
-    lang = db_interface.get_language(chat_id)
-    update.message.reply_text(
-        text["ask_pass"][lang], reply_markup=ReplyKeyboardRemove()
-    )
-    return State.CHECK_PASSWORD
-
-
-def check_password(update: Update, context: CallbackContext):
-    log_message(update)
-    chat_id = update.message.chat.id
-    lang = db_interface.get_language(chat_id)
-
-    if validate_password(update.message.text):
-        db_interface.authorize_user(chat_id)
-        update.message.reply_text(text["pass_success"][lang])
-        return start_query(update, context)
-
-    update.message.reply_text(text["pass_wrong"][lang])
-    return State.CHECK_PASSWORD
-
-
-def start_query(update: Update, context: CallbackContext):
-    lang = db_interface.get_language(update.message.chat.id)
-    reply_keyboard = [[text["games"][lang]], [text["random"][lang]]]
-    markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
-    update.message.reply_text(text["start_games"][lang], reply_markup=markup)
-    return State.GAMES
-
-
 def rand(update: Update, context: CallbackContext):
     log_message(update)
     lang = db_interface.get_language(update.message.chat.id)
     random_game = db_interface.get_random_game_description(lang)
     update.message.reply_text(random_game)
+
+
+def stop_bot(update: Update, context: CallbackContext):
+    log_message(update)
+    update.message.reply_text("END")
+    return ConversationHandler.END
+
+
+def error(update: Update, context: CallbackContext):
+    """Log Errors caused by Updates."""
+    log_message(update)
+    logger.warning(f'Update "{update}" caused error "{context.error}"')
+
+
+################################
+###### Language ################
+################################
 
 
 def ask_lang(update: Update, context: CallbackContext):
@@ -91,13 +78,29 @@ def set_lang(update: Update, context: CallbackContext):
     return start(update, context)
 
 
-def stop_bot(update: Update, context: CallbackContext):
-    log_message(update)
-    update.message.reply_text("END")
-    return ConversationHandler.END
+################################
+###### Password ################
+################################
 
 
-def error(update: Update, context: CallbackContext):
-    """Log Errors caused by Updates."""
+def ask_password(update: Update, context: CallbackContext):
+    chat_id = update.message.chat.id
+    lang = db_interface.get_language(chat_id)
+    update.message.reply_text(
+        text["ask_pass"][lang], reply_markup=ReplyKeyboardRemove()
+    )
+    return State.CHECK_PASSWORD
+
+
+def check_password(update: Update, context: CallbackContext):
     log_message(update)
-    logger.warning(f'Update "{update}" caused error "{context.error}"')
+    chat_id = update.message.chat.id
+    lang = db_interface.get_language(chat_id)
+
+    if validate_password(update.message.text):
+        db_interface.authorize_user(chat_id)
+        update.message.reply_text(text["pass_success"][lang])
+        return start_query(update, context)
+
+    update.message.reply_text(text["pass_wrong"][lang])
+    return State.CHECK_PASSWORD

@@ -5,9 +5,9 @@ from typing import Optional
 from telegram import Update
 from telegram.ext import CallbackContext
 
+from bot.data import text
 from bot.database import db_interface
-from bot.etc import text
-from bot.handlers import start_query
+from bot.handlers.utils import start_query
 from bot.utils import get_lang
 from bot.utils import send_msg_with_keyboard
 from bot.utils import State

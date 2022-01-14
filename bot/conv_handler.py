@@ -3,26 +3,26 @@ from telegram.ext import ConversationHandler
 from telegram.ext import Filters
 from telegram.ext import MessageHandler
 
-from bot.admin import admin
-from bot.admin import admin_password
-from bot.admin import new_password
-from bot.admin import update_games
-from bot.ask import ask_type
-from bot.ask import final_answer
-from bot.ask import read_age
-from bot.ask import read_amount
-from bot.ask import read_location
-from bot.ask import read_props
-from bot.ask import read_type
-from bot.ask import result
-from bot.etc import text
+from bot.data import text
+from bot.handlers import admin
+from bot.handlers import admin_password
 from bot.handlers import ask_lang
+from bot.handlers import ask_type
 from bot.handlers import check_password
+from bot.handlers import final_answer
+from bot.handlers import new_password
 from bot.handlers import rand
+from bot.handlers import read_age
+from bot.handlers import read_amount
+from bot.handlers import read_location
+from bot.handlers import read_props
+from bot.handlers import read_type
+from bot.handlers import result
 from bot.handlers import set_lang
 from bot.handlers import start
 from bot.handlers import start_query
 from bot.handlers import stop_bot
+from bot.handlers import update_games
 from bot.utils import State
 
 

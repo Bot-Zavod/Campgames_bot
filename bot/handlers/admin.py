@@ -1,12 +1,11 @@
-import os
 from functools import wraps
 
 from telegram import ReplyKeyboardMarkup
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from bot.etc import text
-from bot.handlers import start
+from bot.admins import ADMINS
+from bot.data import text
 from bot.password import get_password
 from bot.password import write_password
 from bot.utils import get_lang
@@ -15,18 +14,14 @@ from bot.utils import update_games_in_db
 from bot.utils.logs import log_message
 
 
-ADMINS = set(os.getenv("ADMINS", "").split(" "))
-
-
 def restrict_user(func):
     @wraps(func)
     def wrapper(update: Update, context: CallbackContext):
-        username = str(update.message.chat.username).lower()
-        if username in ADMINS:
+        if update.message.chat.id in ADMINS:
             return func(update, context)
         lang = get_lang(update)
         update.message.reply_text(text["sorry"][lang])
-        return start(update, context)
+        return None
 
     return wrapper
 
