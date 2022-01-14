@@ -56,9 +56,7 @@ Launch project:
 ===============
 * `git clone --recurse-submodules https://repo.url repo` - clone repo
 * `cd repo` - move to project directory
----
-* `source setup.sh` - create and activate virtual environment, install dependencies
-    * `--dev` or  `-d`  set up development environment with pre-commit formatter, [read more about pre-commit](https://pre-commit.com/#python)
 * `cp .env.example .env` - create your .env file and insert your values
----
+* `poetry install`
+* `poetry shell` - run virtualenv shell
 * `python3 -m src` - run as python module from top src directory to acsess database layer

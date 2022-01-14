@@ -4,14 +4,14 @@ from telegram import Update
 from telegram.ext import CallbackContext
 from telegram.ext import ConversationHandler
 
-from .database import db_interface
-from .etc import text
-from .utils import logger
-from .utils import State
+from bot.database import db_interface
+from bot.etc import text
+from bot.utils import logger
+from bot.utils import State
 
 
 def start(update: Update, context: CallbackContext):
-    """ check if user is authorized and have language """
+    """check if user is authorized and have language"""
     chat_id = update.message.chat.id
     lang = db_interface.get_language(chat_id)
 

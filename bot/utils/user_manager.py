@@ -1,10 +1,10 @@
 from typing import Dict
 
-from ..database import db_interface
+from bot.database import db_interface
 
 
 class User:
-    """ Telegram user """
+    """Telegram user"""
 
     def __init__(self, chat_id: int, username: str):
         self.chat_id: int = chat_id
@@ -26,7 +26,7 @@ class User:
 
 
 class UserManager:
-    """ manage iser during registration process """
+    """manage iser during registration process"""
 
     def __init__(self):
         self.current_users: Dict[int, User] = {}

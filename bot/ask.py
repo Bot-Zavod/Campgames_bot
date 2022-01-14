@@ -5,13 +5,14 @@ from typing import Optional
 from telegram import Update
 from telegram.ext import CallbackContext
 
-from .database import db_interface
-from .etc import text
-from .handlers import start_query
-from .utils import send_msg_with_keyboard
-from .utils import State
-from .utils import User
-from .utils import user_manager
+from bot.database import db_interface
+from bot.etc import text
+from bot.handlers import start_query
+from bot.utils import get_lang
+from bot.utils import send_msg_with_keyboard
+from bot.utils import State
+from bot.utils import User
+from bot.utils import user_manager
 
 
 def get_answer_id(msg: str, lang: int) -> int:
@@ -41,7 +42,7 @@ def read_answer(
     update: Update, context: CallbackContext, current_flag: int, question_num: int
 ) -> Optional[Callable]:
     chat_id = update.message.chat.id
-    lang = db_interface.get_language(chat_id)
+    lang = get_lang(update)
     massage = update.message.text
 
     if (
@@ -59,7 +60,7 @@ def read_answer(
 
 def ask_type(update: Update, context: CallbackContext):
     chat_id = update.message.chat.id
-    lang = db_interface.get_language(chat_id)
+    lang = get_lang(update)
     user_manager.create_user(User(chat_id, update.message.chat.username))
 
     user_manager.current_users[chat_id].set_flag(1)
@@ -81,8 +82,7 @@ def read_type(update: Update, context: CallbackContext):
 
 
 def ask_age(update: Update, context: CallbackContext):
-    chat_id = update.message.chat.id
-    lang = db_interface.get_language(chat_id)
+    lang = get_lang(update)
     reply_keyboard = [
         [text["6-12"][lang], text["12+"][lang]],
         [text["any"][lang], text["back"][lang]],
@@ -99,8 +99,7 @@ def read_age(update: Update, context: CallbackContext):
 
 
 def ask_amount(update: Update, context: CallbackContext):
-    chat_id = update.message.chat.id
-    lang = db_interface.get_language(chat_id)
+    lang = get_lang(update)
     reply_keyboard = [
         [text["up to 5"][lang], text["5-20"][lang], text["20+"][lang]],
         [text["any"][lang], text["back"][lang]],
@@ -117,8 +116,7 @@ def read_amount(update: Update, context: CallbackContext):
 
 
 def ask_location(update: Update, context: CallbackContext):
-    chat_id = update.message.chat.id
-    lang = db_interface.get_language(chat_id)
+    lang = get_lang(update)
     reply_keyboard = [
         [text["outside"][lang], text["inside"][lang]],
         [text["any"][lang], text["back"][lang]],
@@ -135,8 +133,7 @@ def read_location(update: Update, context: CallbackContext):
 
 
 def ask_props(update: Update, context: CallbackContext):
-    chat_id = update.message.chat.id
-    lang = db_interface.get_language(chat_id)
+    lang = get_lang(update)
     reply_keyboard = [
         [text["yes"][lang], text["no"][lang]],
         [text["any"][lang], text["back"][lang]],
@@ -154,7 +151,7 @@ def read_props(update: Update, context: CallbackContext):
 
 def result(update: Update, context: CallbackContext):
     chat_id = update.message.chat.id
-    lang = db_interface.get_language(chat_id)
+    lang = get_lang(update)
     answers = user_manager.current_users[chat_id].answers
     games = db_interface.get_game_names(*answers)
 
@@ -166,7 +163,7 @@ def result(update: Update, context: CallbackContext):
 
 def final_answer(update: Update, context: CallbackContext):
     chat_id = update.message.chat.id
-    lang = db_interface.get_language(chat_id)
+    lang = get_lang(update)
     massage = update.message.text
     if massage == text["back"][lang] and user_manager.current_users[chat_id].flag == 6:
         return ask_props(update, context)

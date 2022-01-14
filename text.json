@@ -147,6 +147,10 @@
         "1": "Ok man, set the new PASSWORD",
         "0": "Хорошо, введи новый ПАРОЛЬ"
     },
+    "updated": {
+        "1": "Ok man, set the new PASSWORD",
+        "0": "Хорошо, введи новый ПАРОЛЬ"
+    },
     "new_pass": {
         "1": "New password is\n\n",
         "0": "Новый пароль\n\n"

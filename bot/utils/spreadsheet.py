@@ -3,7 +3,7 @@ import os
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
-from ..database import db_interface
+from bot.database import db_interface
 
 # check this, in case you are not
 # familiar with google spreadsheets
@@ -11,7 +11,7 @@ from ..database import db_interface
 
 
 def spreadsheet() -> object:
-    """ return one of two spreadsheets """
+    """return one of two spreadsheets"""
 
     scope = [
         "https://spreadsheets.google.com/feeds",
@@ -37,13 +37,10 @@ def update_spreadsheet_from_db():
 
 
 def update_games_in_db():
-    """ drops bd and write data from spreadsheet """
+    """drops bd and write data from spreadsheet"""
     worksheet = spreadsheet()
     games = worksheet.get_all_values()
     # update_spreadsheet_from_db()
-    try:
-        num_rows_deleted = db_interface.delete_games()
-        db_interface.set_games(games[1:])
-    except Exception as error:
-        return "Failed with " + str(error)
-    return f"Deleted {num_rows_deleted} rows\nAdded {len(games)} rows"
+    num_rows_deleted = db_interface.delete_games()
+    db_interface.set_games(games[1:])
+    return num_rows_deleted, len(games)

@@ -4,11 +4,11 @@ from dotenv import load_dotenv
 from telegram.ext import CommandHandler
 from telegram.ext import Updater
 
-from .admin import admin
-from .conv_handler import conversation_handler
-from .handlers import ask_lang
-from .handlers import error
-from .handlers import stop_bot
+from bot.admin import admin
+from bot.conv_handler import conversation_handler
+from bot.handlers import ask_lang
+from bot.handlers import error
+from bot.handlers import stop_bot
 
 load_dotenv()
 
