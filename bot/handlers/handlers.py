@@ -56,7 +56,12 @@ def ask_lang(update: Update, context: CallbackContext):
         reply_keyboard, one_time_keyboard=True, resize_keyboard=True
     )
     lang = db_interface.get_language(update.message.chat.id)
-    update.message.reply_text(text["ask_lang"][lang], reply_markup=markup)
+    ask_text = ""
+    if lang:
+        ask_text += text["ask_lang"][lang]
+    else:
+        ask_text += text["ask_lang"][0] + "\n" + text["ask_lang"][1]
+    update.message.reply_text(ask_text, reply_markup=markup)
     return State.CHOOSE_LANG
 
 

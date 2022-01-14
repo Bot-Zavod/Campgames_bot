@@ -125,10 +125,12 @@ class DBSession:
         return user
 
     @local_session
-    def create_user(self, session, chat_id: int) -> User:
+    def create_user(self, session, chat_id: int, language: int = None) -> User:
         user = session.query(User).get(chat_id)
         if not user:
             user = User(chat_id=chat_id, is_registered=False)
+            if language in (0, 1):
+                user.language = language
             session.add(user)
             session.commit()
         return user
@@ -151,9 +153,10 @@ class DBSession:
     def set_language(self, session, chat_id: int, lang: int):
         user = session.query(User).get(chat_id)
         if not user:
-            user = self.create_user(chat_id)
-        user.language = lang
-        session.commit()
+            user = self.create_user(chat_id, lang)
+        else:
+            user.language = lang
+            session.commit()
 
 
 db_interface = DBSession()
