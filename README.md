@@ -6,9 +6,6 @@
 
 
 👾 Telegram-bot:
-
-![bot_logo](media/bot_logo.jpg)
-
 https://t.me/campgamesbot
 
 
@@ -26,13 +23,6 @@ https://t.me/campgamesbot
     * __Public__:
         * ```/id``` return current chat id
         * ```/time``` return current server time
-    * __Admin__:
-        * ```/drop 000000``` drop cascade user record from database by id
-        * ```/set 000000``` set user_data and univeristy_id by chat_id to admin profile for tests
-        * ```/parse 24``` - parse specific university
-        * ```/push_status``` - push status % and time
-
-
 
 
 Prepare system

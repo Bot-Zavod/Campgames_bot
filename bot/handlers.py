@@ -1,3 +1,4 @@
+from loguru import logger
 from telegram import ReplyKeyboardMarkup
 from telegram import ReplyKeyboardRemove
 from telegram import Update
@@ -6,12 +7,14 @@ from telegram.ext import ConversationHandler
 
 from bot.database import db_interface
 from bot.etc import text
-from bot.utils import logger
+from bot.password import validate_password
 from bot.utils import State
+from bot.utils.logs import log_message
 
 
 def start(update: Update, context: CallbackContext):
     """check if user is authorized and have language"""
+    log_message(update)
     chat_id = update.message.chat.id
     lang = db_interface.get_language(chat_id)
 
@@ -34,12 +37,11 @@ def ask_password(update: Update, context: CallbackContext):
 
 
 def check_password(update: Update, context: CallbackContext):
+    log_message(update)
     chat_id = update.message.chat.id
     lang = db_interface.get_language(chat_id)
-    with open("password.txt", "r") as file:
-        password = file.readline().strip()
 
-    if update.message.text == password:
+    if validate_password(update.message.text):
         db_interface.authorize_user(chat_id)
         update.message.reply_text(text["pass_success"][lang])
         return start_query(update, context)
@@ -57,12 +59,14 @@ def start_query(update: Update, context: CallbackContext):
 
 
 def rand(update: Update, context: CallbackContext):
+    log_message(update)
     lang = db_interface.get_language(update.message.chat.id)
     random_game = db_interface.get_random_game_description(lang)
     update.message.reply_text(random_game)
 
 
 def ask_lang(update: Update, context: CallbackContext):
+    log_message(update)
     reply_keyboard = [[text["langs"][0]], [text["langs"][1]]]
     markup = ReplyKeyboardMarkup(
         reply_keyboard, one_time_keyboard=True, resize_keyboard=True
@@ -73,6 +77,7 @@ def ask_lang(update: Update, context: CallbackContext):
 
 
 def set_lang(update: Update, context: CallbackContext):
+    log_message(update)
     chat_id = update.message.chat.id
 
     langs = {text["langs"][0]: 0, text["langs"][1]: 1}
@@ -87,10 +92,12 @@ def set_lang(update: Update, context: CallbackContext):
 
 
 def stop_bot(update: Update, context: CallbackContext):
+    log_message(update)
     update.message.reply_text("END")
     return ConversationHandler.END
 
 
 def error(update: Update, context: CallbackContext):
     """Log Errors caused by Updates."""
-    logger.warning('Update "%s" caused error "%s"', update, context.error)
+    log_message(update)
+    logger.warning(f'Update "{update}" caused error "{context.error}"')

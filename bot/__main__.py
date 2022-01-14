@@ -1,6 +1,7 @@
 import os
 
 from dotenv import load_dotenv
+from loguru import logger
 from telegram.ext import CommandHandler
 from telegram.ext import Updater
 
@@ -10,7 +11,17 @@ from bot.handlers import ask_lang
 from bot.handlers import error
 from bot.handlers import stop_bot
 
+logger.add(
+    os.path.join("logs", "out.log"),
+    rotation="1 week",
+    backtrace=True,
+    diagnose=True,
+    serialize=True,
+)
+logger.debug("Modules imported succesfully")
+
 load_dotenv()
+logger.debug("Enviroment variables loaded")
 
 
 def main():

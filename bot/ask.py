@@ -13,6 +13,7 @@ from bot.utils import send_msg_with_keyboard
 from bot.utils import State
 from bot.utils import User
 from bot.utils import user_manager
+from bot.utils.logs import log_message
 
 
 def get_answer_id(msg: str, lang: int) -> int:
@@ -41,6 +42,7 @@ def get_answer_id(msg: str, lang: int) -> int:
 def read_answer(
     update: Update, context: CallbackContext, current_flag: int, question_num: int
 ) -> Optional[Callable]:
+    log_message(update)
     chat_id = update.message.chat.id
     lang = get_lang(update)
     massage = update.message.text
@@ -75,6 +77,7 @@ def ask_type(update: Update, context: CallbackContext):
 
 
 def read_type(update: Update, context: CallbackContext):
+    log_message(update)
     back = read_answer(update, context, current_flag=2, question_num=0)
     if back:
         return back(update, context)
@@ -92,6 +95,7 @@ def ask_age(update: Update, context: CallbackContext):
 
 
 def read_age(update: Update, context: CallbackContext):
+    log_message(update)
     back = read_answer(update, context, current_flag=3, question_num=1)
     if back:
         return back(update, context)
@@ -109,6 +113,7 @@ def ask_amount(update: Update, context: CallbackContext):
 
 
 def read_amount(update: Update, context: CallbackContext):
+    log_message(update)
     back = read_answer(update, context, current_flag=4, question_num=2)
     if back:
         return back(update, context)
@@ -126,6 +131,7 @@ def ask_location(update: Update, context: CallbackContext):
 
 
 def read_location(update: Update, context: CallbackContext):
+    log_message(update)
     back = read_answer(update, context, current_flag=5, question_num=3)
     if back:
         return back(update, context)
@@ -143,6 +149,7 @@ def ask_props(update: Update, context: CallbackContext):
 
 
 def read_props(update: Update, context: CallbackContext):
+    log_message(update)
     back = read_answer(update, context, current_flag=6, question_num=4)
     if back:
         return back(update, context)
@@ -162,6 +169,7 @@ def result(update: Update, context: CallbackContext):
 
 
 def final_answer(update: Update, context: CallbackContext):
+    log_message(update)
     chat_id = update.message.chat.id
     lang = get_lang(update)
     massage = update.message.text

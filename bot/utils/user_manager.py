@@ -1,5 +1,7 @@
 from typing import Dict
 
+from loguru import logger
+
 from bot.database import db_interface
 
 
@@ -35,13 +37,13 @@ class UserManager:
         if user.chat_id not in self.current_users:
             self.current_users[user.chat_id] = user
         else:
-            print("ADDING EXISTING USER")
+            logger.warning("ADDING EXISTING USER")
 
     def delete_user(self, chat_id: int):
         if chat_id in self.current_users:
             del self.current_users[chat_id]
         else:
-            print(f"[WARNING]DELETING UNEXISTING USER {chat_id}")
+            logger.warning(f"[WARNING]DELETING UNEXISTING USER {chat_id}")
 
 
 user_manager = UserManager()

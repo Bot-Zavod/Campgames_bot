@@ -1,8 +1,11 @@
 import json
+import os
 from collections import defaultdict
 from typing import Dict
 
-with open("text.json", "r") as fp:
+text_path = os.path.join("data", "text.json")
+
+with open(text_path, "r") as fp:
     demo_text: Dict[str, Dict[str, str]] = json.load(fp)
 
     # before keys where ints, but after migrating to json theu turn strings

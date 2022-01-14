@@ -7,9 +7,13 @@ from telegram.ext import CallbackContext
 
 from bot.etc import text
 from bot.handlers import start
+from bot.password import get_password
+from bot.password import write_password
 from bot.utils import get_lang
 from bot.utils import State
 from bot.utils import update_games_in_db
+from bot.utils.logs import log_message
+
 
 ADMINS = set(os.getenv("ADMINS", "").split(" "))
 
@@ -29,9 +33,9 @@ def restrict_user(func):
 
 @restrict_user
 def admin(update: Update, context: CallbackContext):
+    log_message(update)
     lang = get_lang(update)
-    with open("password.txt", "r") as file:
-        password = file.readline()
+    password = get_password()
     reply_keyboard = [
         [text["update"][lang], text["change_password"][lang]],
         [text["back"][lang]],
@@ -43,6 +47,7 @@ def admin(update: Update, context: CallbackContext):
 
 @restrict_user
 def update_games(update: Update, context: CallbackContext):
+    log_message(update)
     msg_text = ""
     try:
         num_rows_deleted, games = update_games_in_db()
@@ -54,6 +59,7 @@ def update_games(update: Update, context: CallbackContext):
 
 @restrict_user
 def admin_password(update: Update, context: CallbackContext):
+    log_message(update)
     lang = get_lang(update)
     update.message.reply_text(text["send_pass"][lang])
     return State.ADMIN_PASSWORD
@@ -61,8 +67,8 @@ def admin_password(update: Update, context: CallbackContext):
 
 @restrict_user
 def new_password(update: Update, context: CallbackContext):
+    log_message(update)
     lang = get_lang(update)
-    with open("password.txt", "w") as file:
-        file.write(update.message.text)
+    write_password(update.message.text)
     update.message.reply_text(text["new_pass"][lang] + update.message.text)
     return admin(update, context)

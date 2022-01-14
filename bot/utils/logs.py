@@ -1,8 +1,12 @@
-import logging
+""" logger config """
+from loguru import logger
+from telegram import Update
 
 
-# Enable logging
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-)
-logger = logging.getLogger(__name__)
+def log_message(update: Update):
+    """Logging user id and message"""
+
+    if hasattr(update, "message") and hasattr(update.message, "chat"):
+        logger.bind(chat_id=update.message.chat.id).opt(depth=1).info(
+            update.message.text
+        )
