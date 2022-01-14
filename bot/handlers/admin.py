@@ -1,3 +1,4 @@
+import os
 from functools import wraps
 
 from telegram import ReplyKeyboardMarkup
@@ -12,6 +13,9 @@ from bot.utils import get_lang
 from bot.utils import State
 from bot.utils import update_games_in_db
 from bot.utils.logs import log_message
+
+
+GAMES_TABLE_KEY = os.getenv("GAMES_TABLE_KEY")
 
 
 def restrict_user(func):
@@ -46,7 +50,7 @@ def update_games(update: Update, context: CallbackContext):
     msg_text = ""
     try:
         num_rows_deleted, games = update_games_in_db()
-        msg_text += f"Deleted {num_rows_deleted} rows\nAdded {games} rows"
+        msg_text += f"Deleted {num_rows_deleted} rows\nAdded {games} rows\nFrom table: https://docs.google.com/spreadsheets/d/{GAMES_TABLE_KEY}/"
     except Exception as error:
         msg_text += "Failed with " + str(error)
     update.message.reply_text(msg_text)
