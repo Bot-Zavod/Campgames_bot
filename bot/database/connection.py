@@ -9,7 +9,7 @@ from .models import Base
 
 
 base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
-sqlite_dir = path.join(base_dir, "database.sqlite")
+sqlite_dir = path.join(base_dir, "db.sqlite3")
 sqlite_db = {"drivername": "sqlite", "database": sqlite_dir}
 sqlite_uri = URL(**sqlite_db)
 print("sqlite_uri: ", sqlite_uri)
@@ -20,7 +20,7 @@ Base.metadata.create_all(sqlite_engine)
 
 
 def testdb():
-    """ run empty transaction """
+    """run empty transaction"""
     try:
         Session().execute("SELECT 1 WHERE false;")
         print("-------- DB conn test Successful --------")
@@ -33,7 +33,7 @@ testdb()
 
 
 def local_session(function):
-    """ build and close local session """
+    """build and close local session"""
 
     @wraps(function)
     def wrapped(self, *args, **kwargs):
