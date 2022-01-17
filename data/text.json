@@ -1,4 +1,8 @@
 {
+    "server_error": {
+        "1": "An error occurred 🧨\n\nThe developer has already been notified 😉\n\nTry later 🕗",
+        "0": "Виникла помилка 🧨\n\nРозробник вже повідомлений 😉\n\nСпробуй пізніше 🕗"
+    },
     "start": {
         "1": "Hello\nI am Camp Games bot!\nI will help you to find a game for any occasion!",
         "0": "Привет\nЯ - Camp Games бот!\nЯ помогу тебе найти игру на любой случай!"

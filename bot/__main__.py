@@ -16,7 +16,7 @@ from bot.handlers import admin
 from bot.handlers import ask_lang
 from bot.handlers import check_id
 from bot.handlers import check_time
-from bot.handlers import error
+from bot.handlers import error_handler
 from bot.handlers import stop_bot
 
 
@@ -67,7 +67,7 @@ def main():
     dispatcher.add_handler(CommandHandler("stop", stop_bot))
     dispatcher.add_handler(CommandHandler("admin", admin))
     dispatcher.add_handler(CommandHandler("language", ask_lang))
-    dispatcher.add_error_handler(error)
+    dispatcher.add_error_handler(error_handler)
     # debug tools
     dispatcher.add_handler(CommandHandler("id", check_id))
     dispatcher.add_handler(CommandHandler("time", check_time))
