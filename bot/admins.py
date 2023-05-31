@@ -1,11 +1,10 @@
-import os
 from typing import List
 
-from dotenv import load_dotenv
 from loguru import logger
 
+from bot.config import settings
 
-load_dotenv()
-admins_str: str = os.getenv("ADMINS", "")
-logger.info(f"admin ids: {admins_str}")
+
+admins_str: str = settings.ADMINS
 ADMINS: List[int] = list(map(int, admins_str.split(" ")))
+logger.info(f"admin ids: {ADMINS}")

@@ -1,19 +1,18 @@
 from functools import wraps
-from os import path
 
 from sqlalchemy import create_engine
 from sqlalchemy.engine.url import URL
 from sqlalchemy.orm import sessionmaker
+from sqlalchemy.sql import text
 
-from .models import Base
+from bot.config import settings
+from bot.database.models import Base
 
 
-base_dir = path.dirname(path.dirname(path.dirname(path.abspath(__file__))))
-sqlite_dir = path.join(base_dir, "db.sqlite3")
-sqlite_db = {"drivername": "sqlite", "database": sqlite_dir}
-sqlite_uri = URL(**sqlite_db)
-print("sqlite_uri: ", sqlite_uri)
-sqlite_engine = create_engine(sqlite_uri)
+sqlite_dir = settings.APP_DIR / "db.sqlite3"
+sqlite_url = URL.create(drivername="sqlite", database=str(sqlite_dir))
+print("sqlite_url: ", sqlite_url)
+sqlite_engine = create_engine(sqlite_url)
 Session = sessionmaker(bind=sqlite_engine)
 
 Base.metadata.create_all(sqlite_engine)
@@ -22,7 +21,7 @@ Base.metadata.create_all(sqlite_engine)
 def testdb():
     """run empty transaction"""
     try:
-        Session().execute("SELECT 1 WHERE false;")
+        Session().execute(text("SELECT 1 WHERE false;"))
         print("-------- DB conn test Successful --------")
     except Exception as error:
         print("!!!!!!!! DB conn test Failed !!!!!!!!")

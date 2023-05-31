@@ -22,7 +22,7 @@ Base: Any = declarative_base(metadata=meta)
 
 
 class User(Base):
-    """ telegram user """
+    """telegram user"""
 
     __tablename__ = "user"
 
@@ -32,13 +32,14 @@ class User(Base):
     language = Column(Integer)  # 1 - en, 0 - ru
 
     def __repr__(self):
+        # pylint: disable-next=consider-using-f-string
         return "<User(chat_id='{}', username='{}', is_registered='{}', language='{}')>".format(
             self.chat_id, self.username, self.is_registered, self.language
         )
 
 
 class Game(Base):
-    """ game for children """
+    """game for children"""
 
     __tablename__ = "game"
 
@@ -55,4 +56,5 @@ class Game(Base):
     props = Column(String)
 
     def __repr__(self):
+        # pylint: disable-next=consider-using-f-string
         return "<Game(id='{}', name_ru='{}')>".format(self.id, self.name_ru)

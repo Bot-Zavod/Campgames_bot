@@ -134,3 +134,4 @@ database.sqlite
 .vscode/*
 *.pickle
 data/password.txt
+storage

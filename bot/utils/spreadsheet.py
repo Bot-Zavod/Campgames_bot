@@ -1,8 +1,7 @@
-import os
-
 import gspread
 from oauth2client.service_account import ServiceAccountCredentials
 
+from bot.config import settings
 from bot.database import db_interface
 
 # check this, in case you are not
@@ -17,11 +16,10 @@ def spreadsheet() -> object:
         "https://spreadsheets.google.com/feeds",
         "https://www.googleapis.com/auth/drive",
     ]
-    path = "google_api.json"
-    full_path = os.path.abspath(os.path.expanduser(os.path.expandvars(path)))
-    creds = ServiceAccountCredentials.from_json_keyfile_name(full_path, scope)
+    creds_path = settings.APP_DIR / "google_api.json"
+    creds = ServiceAccountCredentials.from_json_keyfile_name(creds_path, scope)
     client = gspread.authorize(creds)
-    table = os.getenv("GAMES_TABLE_KEY")
+    table = settings.GAMES_TABLE_KEY
     # If you want to be specific, use a key (which can be extracted from
     # the spreadsheet's url)
     sheet = client.open_by_key(table)

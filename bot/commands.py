@@ -1,16 +1,20 @@
 """ Commands interface """
 from loguru import logger
 from telegram import Bot
+from telegram import BotCommandScopeAllChatAdministrators
+from telegram import BotCommandScopeAllGroupChats
 from telegram import BotCommandScopeAllPrivateChats
 from telegram import BotCommandScopeChat
 
 from bot.admins import ADMINS
 
 
-def clear_bot(bot: Bot):
+async def clear_bot(bot: Bot):
     """deletes previous commands"""
 
-    bot.delete_my_commands()
+    await bot.delete_my_commands(BotCommandScopeAllPrivateChats())
+    await bot.delete_my_commands(BotCommandScopeAllGroupChats())
+    await bot.delete_my_commands(BotCommandScopeAllChatAdministrators())
     logger.debug("User commands were cleared.")
 
 
@@ -27,13 +31,13 @@ admin_commands = [
 ]
 
 
-def set_bot_commands(bot: Bot):
+async def set_bot_commands(bot: Bot):
     """create commands lists for different chats and users"""
 
     # admins
     for chat_id in ADMINS:
         try:
-            bot.set_my_commands(
+            await bot.set_my_commands(
                 all_commands + admin_commands, scope=BotCommandScopeChat(chat_id)
             )
         except Exception as error:
@@ -42,6 +46,6 @@ def set_bot_commands(bot: Bot):
             )
 
     # privat chats
-    bot.set_my_commands(all_commands, scope=BotCommandScopeAllPrivateChats())
+    await bot.set_my_commands(all_commands, scope=BotCommandScopeAllPrivateChats())
 
     logger.debug("Command list was updated.")

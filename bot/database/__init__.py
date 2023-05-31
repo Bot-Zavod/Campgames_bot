@@ -1,5 +1,4 @@
 from random import randint
-from typing import List
 from typing import Optional
 
 from sqlalchemy import or_
@@ -125,7 +124,9 @@ class DBSession:
         return user
 
     @local_session
-    def create_user(self, session, chat_id: int, language: int = None) -> User:
+    def create_user(
+        self, session, chat_id: int, language: Optional[int] = None
+    ) -> User:
         user = session.query(User).get(chat_id)
         if not user:
             user = User(chat_id=chat_id, is_registered=False)

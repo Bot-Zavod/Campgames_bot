@@ -2,7 +2,6 @@
 disable=missing-module-docstring,
         import-error,
         fixme,
-        no-self-use,
         unused-argument,
         too-few-public-methods,
         no-value-for-parameter,
@@ -15,6 +14,7 @@ disable=missing-module-docstring,
         wildcard-import,
         too-many-return-statements,
         too-many-arguments,
-        missing-function-docstring
+        missing-function-docstring,
+        missing-class-docstring
 [DESIGN]
 max-attributes=12

@@ -1,11 +1,12 @@
 import json
-import os
 from collections import defaultdict
 from typing import Dict
 
-text_path = os.path.join("data", "text.json")
+from bot.config import settings
 
-with open(text_path, "r") as fp:
+text_path = settings.APP_DIR / "data" / "text.json"
+
+with text_path.open() as fp:
     demo_text: Dict[str, Dict[str, str]] = json.load(fp)
 
     # before keys where ints, but after migrating to json theu turn strings

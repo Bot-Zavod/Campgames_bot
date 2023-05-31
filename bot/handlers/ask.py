@@ -3,7 +3,7 @@ from typing import Dict
 from typing import Optional
 
 from telegram import Update
-from telegram.ext import CallbackContext
+from telegram.ext import ContextTypes
 
 from bot.data import text
 from bot.database import db_interface
@@ -39,8 +39,11 @@ def get_answer_id(msg: str, lang: int) -> int:
     return choices.get(msg, -1)
 
 
-def read_answer(
-    update: Update, context: CallbackContext, current_flag: int, question_num: int
+async def read_answer(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+    current_flag: int,
+    question_num: int,
 ) -> Optional[Callable]:
     log_message(update)
     chat_id = update.message.chat.id
@@ -51,7 +54,7 @@ def read_answer(
         massage == text["back"][lang]
         and user_manager.current_users[chat_id].flag == current_flag - 1
     ):
-        return start_query
+        return await start_query(update, context)
 
     user_manager.current_users[chat_id].set_flag(current_flag)
 
@@ -61,7 +64,7 @@ def read_answer(
     return None
 
 
-def ask_type(update: Update, context: CallbackContext):
+async def ask_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat.id
     lang = get_lang(update)
     user_manager.create_user(User(chat_id, update.message.chat.username))
@@ -73,91 +76,99 @@ def ask_type(update: Update, context: CallbackContext):
         [text["timefiller"][lang]],
         [text["any"][lang], text["back"][lang]],
     ]
-    send_msg_with_keyboard(update, text["ask_type"][lang], reply_keyboard)
+    await send_msg_with_keyboard(
+        update, context, text["ask_type"][lang], reply_keyboard
+    )
     return State.GET_TYPE
 
 
-def read_type(update: Update, context: CallbackContext):
+async def read_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    back = read_answer(update, context, current_flag=2, question_num=0)
+    back = await read_answer(update, context, current_flag=2, question_num=0)
     if back:
-        return back(update, context)
-    return ask_age(update, context)
+        return await back(update, context)
+    return await ask_age(update, context)
 
 
-def ask_age(update: Update, context: CallbackContext):
+async def ask_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
     lang = get_lang(update)
     reply_keyboard = [
         [text["6-12"][lang], text["12+"][lang]],
         [text["any"][lang], text["back"][lang]],
     ]
-    send_msg_with_keyboard(update, text["ask_age"][lang], reply_keyboard)
+    await send_msg_with_keyboard(update, context, text["ask_age"][lang], reply_keyboard)
     return State.GET_AGE
 
 
-def read_age(update: Update, context: CallbackContext):
+async def read_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    back = read_answer(update, context, current_flag=3, question_num=1)
+    back = await read_answer(update, context, current_flag=3, question_num=1)
     if back:
-        return back(update, context)
-    return ask_amount(update, context)
+        return await back(update, context)
+    return await ask_amount(update, context)
 
 
-def ask_amount(update: Update, context: CallbackContext):
+async def ask_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
     lang = get_lang(update)
     reply_keyboard = [
         [text["up to 5"][lang], text["5-20"][lang], text["20+"][lang]],
         [text["any"][lang], text["back"][lang]],
     ]
-    send_msg_with_keyboard(update, text["ask_amount"][lang], reply_keyboard)
+    await send_msg_with_keyboard(
+        update, context, text["ask_amount"][lang], reply_keyboard
+    )
     return State.GET_AMOUNT
 
 
-def read_amount(update: Update, context: CallbackContext):
+async def read_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    back = read_answer(update, context, current_flag=4, question_num=2)
+    back = await read_answer(update, context, current_flag=4, question_num=2)
     if back:
-        return back(update, context)
-    return ask_location(update, context)
+        return await back(update, context)
+    return await ask_location(update, context)
 
 
-def ask_location(update: Update, context: CallbackContext):
+async def ask_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
     lang = get_lang(update)
     reply_keyboard = [
         [text["outside"][lang], text["inside"][lang]],
         [text["any"][lang], text["back"][lang]],
     ]
-    send_msg_with_keyboard(update, text["ask_location"][lang], reply_keyboard)
+    await send_msg_with_keyboard(
+        update, context, text["ask_location"][lang], reply_keyboard
+    )
     return State.GET_LOCATION
 
 
-def read_location(update: Update, context: CallbackContext):
+async def read_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    back = read_answer(update, context, current_flag=5, question_num=3)
+    back = await read_answer(update, context, current_flag=5, question_num=3)
     if back:
-        return back(update, context)
-    return ask_props(update, context)
+        return await back(update, context)
+    return await ask_props(update, context)
 
 
-def ask_props(update: Update, context: CallbackContext):
+async def ask_props(update: Update, context: ContextTypes.DEFAULT_TYPE):
     lang = get_lang(update)
     reply_keyboard = [
         [text["yes"][lang], text["no"][lang]],
         [text["any"][lang], text["back"][lang]],
     ]
-    send_msg_with_keyboard(update, text["ask_props"][lang], reply_keyboard)
+    await send_msg_with_keyboard(
+        update, context, text["ask_props"][lang], reply_keyboard
+    )
     return State.GET_PROPS
 
 
-def read_props(update: Update, context: CallbackContext):
+async def read_props(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    back = read_answer(update, context, current_flag=6, question_num=4)
+    back = await read_answer(update, context, current_flag=6, question_num=4)
     if back:
-        return back(update, context)
-    return result(update, context)
+        return await back(update, context)
+    return await result(update, context)
 
 
-def result(update: Update, context: CallbackContext):
+async def result(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat.id
     lang = get_lang(update)
     answers = user_manager.current_users[chat_id].answers
@@ -165,23 +176,23 @@ def result(update: Update, context: CallbackContext):
 
     reply_keyboard = [[game_name[lang + 1]] for game_name in games]
     reply_keyboard.append([text["back"][lang], text["menu"][lang]])
-    send_msg_with_keyboard(update, text["answer"][lang], reply_keyboard)
+    await send_msg_with_keyboard(update, context, text["answer"][lang], reply_keyboard)
     return State.ANSWER
 
 
-def final_answer(update: Update, context: CallbackContext):
+async def final_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
     chat_id = update.message.chat.id
     lang = get_lang(update)
     massage = update.message.text
     if massage == text["back"][lang] and user_manager.current_users[chat_id].flag == 6:
-        return ask_props(update, context)
+        return await ask_props(update, context)
     if massage == text["menu"][lang]:
         user_manager.delete_user(chat_id)
-        return start_query(update, context)
+        return await start_query(update, context)
     user_manager.current_users[chat_id].set_flag(7)
 
     description = db_interface.get_game_description(massage, lang)
     reply_keyboard = [[text["back"][lang], text["menu"][lang]]]
-    send_msg_with_keyboard(update, description, reply_keyboard)
+    await send_msg_with_keyboard(update, context, description, reply_keyboard)
     return State.BACK_ANSWER
