@@ -70,7 +70,7 @@ def run_bot():
     application.add_handler(CommandHandler("id", check_id))
     application.add_handler(CommandHandler("time", check_time))
     # application.add_handler(CommandHandler("language", ask_lang))
-    application.add_error_handler(error_handler)
+    application.add_error_handler(error_handler)  # type: ignore
 
     logger.debug("starting polling")
     application.run_polling()

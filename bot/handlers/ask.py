@@ -1,4 +1,3 @@
-from typing import Callable
 from typing import Dict
 from typing import Optional
 
@@ -16,7 +15,8 @@ from bot.utils import user_manager
 from bot.utils.logs import log_message
 
 
-def get_answer_id(msg: str, lang: int) -> int:
+def get_answer_id(msg: str, lang: int) -> Optional[int]:
+    # always return -1 if msg is not in choices
     choices: Dict[str, int] = {
         # type
         text["team_building"][lang]: 0,
@@ -36,31 +36,17 @@ def get_answer_id(msg: str, lang: int) -> int:
         text["no"][lang]: 0,
         text["yes"][lang]: 1,
     }
-    return choices.get(msg, -1)
+    return choices.get(msg)
 
 
-async def read_answer(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-    current_flag: int,
-    question_num: int,
-) -> Optional[Callable]:
-    # log_message(update)
+async def read_answer(update: Update, question_num: int):
     chat_id = update.message.chat.id
     lang = get_lang(update)
-    massage = update.message.text
 
-    if massage == text["back"][lang]:
-        # await start_query(update, context)
-        user_manager.current_users[chat_id].take_answer(question_num - 1, None)
-        return back_state
-    # (massage == text["back"][lang] and user_manager.current_users[chat_id].flag == current_flag - 1)
-    user_manager.current_users[chat_id].set_flag(current_flag)
-
-    answer_id = get_answer_id(massage, lang)
-    if answer_id != -1:
-        user_manager.current_users[chat_id].take_answer(question_num, answer_id)
-    return None
+    answer_id = get_answer_id(update.message.text, lang)
+    if answer_id is not None:
+        user_manager.current_users[chat_id].take_answer(question_num, answer_id) # TODO user_manager.take_answer(chat_id, question_num, answer_id)
+        # TODO question_num -> Enum with questions (type, age, count, place, props)
 
 
 async def ask_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -78,14 +64,12 @@ async def ask_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_msg_with_keyboard(
         update, context, text["ask_type"][lang], reply_keyboard
     )
-    return State.GET_TYPE
+    return State.READ_TYPE
 
 
 async def read_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    back = await read_answer(update, context, current_flag=2, question_num=0)
-    if back:
-        return await back(update, context,current_flag=1, question_num=0)
+    await read_answer(update, question_num=0)
     return await ask_age(update, context)
 
 
@@ -96,14 +80,12 @@ async def ask_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
         [text["any"][lang], text["back"][lang]],
     ]
     await send_msg_with_keyboard(update, context, text["ask_age"][lang], reply_keyboard)
-    return State.GET_AGE
+    return State.READ_AGE
 
 
 async def read_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    back = await read_answer(update, context, current_flag=3, question_num=1)
-    if back:
-        return await back(update, context, current_flag=2, question_num=0)
+    await read_answer(update, question_num=1)
     return await ask_amount(update, context)
 
 
@@ -116,14 +98,12 @@ async def ask_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_msg_with_keyboard(
         update, context, text["ask_amount"][lang], reply_keyboard
     )
-    return State.GET_AMOUNT
+    return State.READ_AMOUNT
 
 
 async def read_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    back = await read_answer(update, context, current_flag=4, question_num=2)
-    if back:
-        return await back(update, context, current_flag=3, question_num=1)
+    await read_answer(update, question_num=2)
     return await ask_location(update, context)
 
 
@@ -136,37 +116,13 @@ async def ask_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await send_msg_with_keyboard(
         update, context, text["ask_location"][lang], reply_keyboard
     )
-    return State.GET_LOCATION
+    return State.READ_LOCATION
 
 
 async def read_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    back = await read_answer(update, context, current_flag=5, question_num=3)
-    if back:
-        return await back(update, context, current_flag=4, question_num=2)
-    # ask_props
+    await read_answer(update, question_num=3)
     return await ask_props(update, context)
-
-
-async def back_state(
-    update: Update,
-    context: ContextTypes.DEFAULT_TYPE,
-    current_flag: int = 6,
-    question_num: int = 4,
-):
-    if current_flag == 6:
-        return await ask_props(update, context)
-    if current_flag == 5:
-        return await ask_location(update, context)
-    if current_flag == 4:
-        return await ask_amount(update, context)
-    if current_flag == 3:
-        return await ask_age(update, context)
-    if current_flag == 2:
-        return await ask_type(update, context)
-    if current_flag == 1:
-        return await start_query(update,context)
-    return
 
 
 async def ask_props(
@@ -181,14 +137,12 @@ async def ask_props(
     await send_msg_with_keyboard(
         update, context, text["ask_props"][lang], reply_keyboard
     )
-    return State.GET_PROPS
+    return State.READ_PROPS
 
 
 async def read_props(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    back = await read_answer(update, context, current_flag=6, question_num=4)
-    if back:
-        return await back(update, context, current_flag=5, question_num=3)
+    await read_answer(update, question_num=4)
     return await result(update, context)
 
 
@@ -209,10 +163,7 @@ async def final_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat.id
     lang = get_lang(update)
     massage = update.message.text
-    # and user_manager.current_users[chat_id].flag == 6
-    if massage == text["back"][lang]:
-        return await back_state(update, context)
-        # return await start_query(update, context)
+
     if massage == text["menu"][lang]:
         user_manager.delete_user(chat_id)
         return await start_query(update, context)

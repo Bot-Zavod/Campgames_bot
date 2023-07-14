@@ -1,3 +1,5 @@
+from typing import Tuple
+
 import gspread  # type: ignore
 from oauth2client.service_account import ServiceAccountCredentials  # type: ignore
 
@@ -9,7 +11,7 @@ from bot.database import db_interface
 # https://github.com/burnash/gspread
 
 
-def spreadsheet() -> object:
+def spreadsheet() -> gspread.Worksheet:
     """return one of two spreadsheets"""
 
     scope = [
@@ -28,13 +30,13 @@ def spreadsheet() -> object:
     return worksheet
 
 
-def update_spreadsheet_from_db():
+def update_spreadsheet_from_db() -> None:
     worksheet = spreadsheet()
     games = db_interface.get_all_games()
     worksheet.update(f"A2:I{len(games)+1}", games)  # except headings
 
 
-def update_games_in_db():
+def update_games_in_db() -> Tuple[int, int]:
     """drops bd and write data from spreadsheet"""
     worksheet = spreadsheet()
     games = worksheet.get_all_values()

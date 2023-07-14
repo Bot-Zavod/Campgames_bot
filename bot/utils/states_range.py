@@ -9,11 +9,11 @@ class State(Enum):
     ADMIN = 2
     GAMES = 3
 
-    GET_TYPE = 4
-    GET_AGE = 5
-    GET_AMOUNT = 6
-    GET_LOCATION = 7
-    GET_PROPS = 8
+    READ_TYPE = 4
+    READ_AGE = 5
+    READ_AMOUNT = 6
+    READ_LOCATION = 7
+    READ_PROPS = 8
 
     ANSWER = 9
     BACK_ANSWER = 10

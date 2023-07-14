@@ -6,7 +6,7 @@ services:
     environment:
       - .env
     volumes:
-      - app-volume:/app/bot/db
+      - campgames-volume:/app/db
 volumes:
-  app-volume:
+  campgames-volume:
     external: true

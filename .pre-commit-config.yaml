@@ -55,6 +55,7 @@ repos:
     - loguru==0.5.3
     args:
     - --no-strict-optional
+    - --check-untyped-defs
     exclude: ^(tests/|sandbox/|docs/)
     files: ^bot/.*\.py$
     id: mypy

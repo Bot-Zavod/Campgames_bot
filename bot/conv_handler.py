@@ -1,3 +1,5 @@
+from typing import Callable
+
 from telegram.ext import CommandHandler
 from telegram.ext import ConversationHandler
 from telegram.ext import filters
@@ -7,20 +9,13 @@ from bot.admins import ADMINS
 from bot.data import text
 from bot.handlers import admin
 from bot.handlers import admin_password
+from bot.handlers import ask
 from bot.handlers import ask_lang
-from bot.handlers import ask_type
 from bot.handlers import check_id
 from bot.handlers import check_password
 from bot.handlers import check_time
-from bot.handlers import final_answer
 from bot.handlers import new_password
 from bot.handlers import rand
-from bot.handlers import read_age
-from bot.handlers import read_amount
-from bot.handlers import read_location
-from bot.handlers import read_props
-from bot.handlers import read_type
-from bot.handlers import result
 from bot.handlers import set_lang
 from bot.handlers import start
 from bot.handlers import start_query
@@ -47,6 +42,10 @@ commands = [
 #     return keys
 
 
+def back_handler(callback: Callable) -> MessageHandler:
+    return MessageHandler(filters.Text(list(text["back"].values())), callback)
+
+
 conversation_handler = ConversationHandler(
     name="base_conversation",
     entry_points=[CommandHandler("start", start)],
@@ -55,10 +54,10 @@ conversation_handler = ConversationHandler(
         # GAMES ##########
         ##################
         State.GAMES: [
-            MessageHandler(filters.Text(list(text["games"].values())), ask_type),
+            MessageHandler(filters.Text(list(text["games"].values())), ask.ask_type),
             MessageHandler(filters.Text(list(text["random"].values())), rand),
             MessageHandler(filters.Text(list(text["ask_lang"].values())), ask_lang),
-            #CommandHandler("language", ask_lang),
+            # CommandHandler("language", ask_lang),
         ],
         ##################
         # Questions ######
@@ -67,14 +66,32 @@ conversation_handler = ConversationHandler(
         State.CHOOSE_LANG: [
             MessageHandler(filters.Text(list(text["langs"].values())), set_lang)
         ],
-        State.GET_TYPE: [MessageHandler(filters.TEXT, read_type)],
-        State.GET_AGE: [MessageHandler(filters.TEXT, read_age)],
-        State.GET_AMOUNT: [MessageHandler(filters.TEXT, read_amount)],
-        State.GET_LOCATION: [MessageHandler(filters.TEXT, read_location)],
-        State.GET_PROPS: [MessageHandler(filters.TEXT, read_props)],
-        State.ANSWER: [MessageHandler(filters.TEXT, final_answer)],
+        State.READ_TYPE: [
+            back_handler(start_query),
+            MessageHandler(filters.TEXT, ask.read_type),
+        ],
+        State.READ_AGE: [
+            back_handler(ask.ask_type),
+            MessageHandler(filters.TEXT, ask.read_age),
+        ],
+        State.READ_AMOUNT: [
+            back_handler(ask.ask_age),
+            MessageHandler(filters.TEXT, ask.read_amount),
+        ],
+        State.READ_LOCATION: [
+            back_handler(ask.ask_amount),
+            MessageHandler(filters.TEXT, ask.read_location),
+        ],
+        State.READ_PROPS: [
+            back_handler(ask.ask_location),
+            MessageHandler(filters.TEXT, ask.read_props),
+        ],
+        State.ANSWER: [
+            back_handler(ask.ask_props),
+            MessageHandler(filters.TEXT, ask.final_answer),
+        ],
         State.BACK_ANSWER: [
-            MessageHandler(filters.Text(list(text["back"].values())), result),
+            back_handler(ask.result),
             MessageHandler(filters.Text(list(text["menu"].values())), start_query),
         ],
     },

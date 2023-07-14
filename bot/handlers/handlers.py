@@ -70,7 +70,7 @@ async def ask_lang(update: Update, context: ContextTypes.DEFAULT_TYPE):
     if lang:
         ask_text += text["ask_lang"][lang]
     else:
-        ask_text += text["ask_lang"][0]# + "\n" + text["ask_lang"][1]
+        ask_text += text["ask_lang"][0]  # + "\n" + text["ask_lang"][1]
     await context.bot.send_message(chat_id=chat_id, text=ask_text, reply_markup=markup)
     return State.CHOOSE_LANG
 
