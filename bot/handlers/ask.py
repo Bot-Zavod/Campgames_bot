@@ -85,7 +85,7 @@ async def read_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
     back = await read_answer(update, context, current_flag=2, question_num=0)
     if back:
-        return await back(update, context)
+        return await back(update, context,current_flag=1, question_num=0)
     return await ask_age(update, context)
 
 
@@ -163,7 +163,9 @@ async def back_state(
     if current_flag == 3:
         return await ask_age(update, context)
     if current_flag == 2:
-        return await start_query(update, context)
+        return await ask_type(update, context)
+    if current_flag == 1:
+        return await start_query(update,context)
     return
 
 
