@@ -1,5 +1,5 @@
-import gspread
-from oauth2client.service_account import ServiceAccountCredentials
+import gspread  # type: ignore
+from oauth2client.service_account import ServiceAccountCredentials  # type: ignore
 
 from bot.config import settings
 from bot.database import db_interface

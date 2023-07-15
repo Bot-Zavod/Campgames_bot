@@ -57,10 +57,15 @@ conversation_handler = ConversationHandler(
         State.GAMES: [
             MessageHandler(filters.Text(list(text["games"].values())), ask_type),
             MessageHandler(filters.Text(list(text["random"].values())), rand),
+            CommandHandler("language", ask_lang),
         ],
         ##################
         # Questions ######
         ##################
+        State.CHECK_PASSWORD: [MessageHandler(filters.TEXT, check_password)],
+        State.CHOOSE_LANG: [
+            MessageHandler(filters.Text(list(text["langs"].values())), set_lang)
+        ],
         State.GET_TYPE: [MessageHandler(filters.TEXT, read_type)],
         State.GET_AGE: [MessageHandler(filters.TEXT, read_age)],
         State.GET_AMOUNT: [MessageHandler(filters.TEXT, read_amount)],

@@ -10,10 +10,11 @@ from bot.commands import set_bot_commands
 from bot.config import settings
 from bot.conv_handler import admin_handler
 from bot.conv_handler import conversation_handler
-from bot.handlers import ask_lang
 from bot.handlers import check_id
 from bot.handlers import check_time
 from bot.handlers import error_handler
+
+# from bot.handlers import ask_lang
 
 
 logger.add(
@@ -68,7 +69,7 @@ def run_bot():
     # debug tools
     application.add_handler(CommandHandler("id", check_id))
     application.add_handler(CommandHandler("time", check_time))
-    application.add_handler(CommandHandler("language", ask_lang))
+    # application.add_handler(CommandHandler("language", ask_lang))
     application.add_error_handler(error_handler)
 
     logger.debug("starting polling")

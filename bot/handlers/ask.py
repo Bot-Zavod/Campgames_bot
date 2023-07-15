@@ -45,17 +45,16 @@ async def read_answer(
     current_flag: int,
     question_num: int,
 ) -> Optional[Callable]:
-    log_message(update)
+    # log_message(update)
     chat_id = update.message.chat.id
     lang = get_lang(update)
     massage = update.message.text
 
-    if (
-        massage == text["back"][lang]
-        and user_manager.current_users[chat_id].flag == current_flag - 1
-    ):
-        return await start_query(update, context)
-
+    if massage == text["back"][lang]:
+        # await start_query(update, context)
+        user_manager.current_users[chat_id].take_answer(question_num - 1, None)
+        return back_state
+    # (massage == text["back"][lang] and user_manager.current_users[chat_id].flag == current_flag - 1)
     user_manager.current_users[chat_id].set_flag(current_flag)
 
     answer_id = get_answer_id(massage, lang)
@@ -104,7 +103,7 @@ async def read_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
     back = await read_answer(update, context, current_flag=3, question_num=1)
     if back:
-        return await back(update, context)
+        return await back(update, context, current_flag=2, question_num=0)
     return await ask_amount(update, context)
 
 
@@ -124,7 +123,7 @@ async def read_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
     back = await read_answer(update, context, current_flag=4, question_num=2)
     if back:
-        return await back(update, context)
+        return await back(update, context, current_flag=3, question_num=1)
     return await ask_location(update, context)
 
 
@@ -144,11 +143,34 @@ async def read_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
     back = await read_answer(update, context, current_flag=5, question_num=3)
     if back:
-        return await back(update, context)
+        return await back(update, context, current_flag=4, question_num=2)
+    # ask_props
     return await ask_props(update, context)
 
 
-async def ask_props(update: Update, context: ContextTypes.DEFAULT_TYPE):
+async def back_state(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+    current_flag: int = 6,
+    question_num: int = 4,
+):
+    if current_flag == 6:
+        return await ask_props(update, context)
+    if current_flag == 5:
+        return await ask_location(update, context)
+    if current_flag == 4:
+        return await ask_amount(update, context)
+    if current_flag == 3:
+        return await ask_age(update, context)
+    if current_flag == 2:
+        return await start_query(update, context)
+    return
+
+
+async def ask_props(
+    update: Update,
+    context: ContextTypes.DEFAULT_TYPE,
+):
     lang = get_lang(update)
     reply_keyboard = [
         [text["yes"][lang], text["no"][lang]],
@@ -164,7 +186,7 @@ async def read_props(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
     back = await read_answer(update, context, current_flag=6, question_num=4)
     if back:
-        return await back(update, context)
+        return await back(update, context, current_flag=5, question_num=3)
     return await result(update, context)
 
 
@@ -185,8 +207,10 @@ async def final_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat.id
     lang = get_lang(update)
     massage = update.message.text
-    if massage == text["back"][lang] and user_manager.current_users[chat_id].flag == 6:
-        return await ask_props(update, context)
+    # and user_manager.current_users[chat_id].flag == 6
+    if massage == text["back"][lang]:
+        return await back_state(update, context)
+        # return await start_query(update, context)
     if massage == text["menu"][lang]:
         user_manager.delete_user(chat_id)
         return await start_query(update, context)
