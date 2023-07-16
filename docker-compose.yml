@@ -6,7 +6,7 @@ services:
     environment:
       - .env
     volumes:
-      - app-volume:/app
+      - app-volume:/app/bot/db
 volumes:
   app-volume:
     external: true

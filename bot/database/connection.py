@@ -9,7 +9,7 @@ from bot.config import settings
 from bot.database.models import Base
 
 
-sqlite_dir = settings.APP_DIR / "db.sqlite3"
+sqlite_dir = settings.APP_DIR / "db" / "db.sqlite3"
 sqlite_url = URL.create(drivername="sqlite", database=str(sqlite_dir))
 print("sqlite_url: ", sqlite_url)
 sqlite_engine = create_engine(sqlite_url)
