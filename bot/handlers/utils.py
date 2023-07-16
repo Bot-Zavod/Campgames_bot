@@ -9,7 +9,7 @@ from bot.utils import State
 
 async def start_query(update: Update, context: ContextTypes.DEFAULT_TYPE):
     lang = get_lang(update)
-    reply_keyboard = [[text["games"][lang]], [text["random"][lang]]]
+    reply_keyboard = [[text["games"][lang]], [text["random"][lang]], [text["ask_lang"][lang]]]
     markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
     chat_id = update.message.chat.id
     await context.bot.send_message(
