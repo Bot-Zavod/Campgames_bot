@@ -7,8 +7,8 @@ import yaml
 
 
 def read_poetry() -> Dict[str, str]:
-    with open("pyproject.toml", "rb") as fp:
-        pyproject = tomli.load(fp)
+    with open("pyproject.toml", "rb") as file:
+        pyproject = tomli.load(file)
 
     dependencies: dict = pyproject["tool"]["poetry"]["dependencies"]
     # {
@@ -33,8 +33,8 @@ def read_poetry() -> Dict[str, str]:
 
 
 def read_pre_commit() -> Tuple[int, dict]:
-    with open(".pre-commit-config.yaml") as fp:
-        pre_commit: dict = yaml.full_load(fp)
+    with open(".pre-commit-config.yaml", encoding="utf-8") as file:
+        pre_commit: dict = yaml.full_load(file)
 
     for index_m, hook in enumerate(pre_commit["repos"]):
         if "additional_dependencies" not in hook["hooks"][0]:
@@ -42,8 +42,7 @@ def read_pre_commit() -> Tuple[int, dict]:
         if hook["hooks"][0]["id"] != "mypy":
             continue
         return index_m, hook
-    else:
-        raise Exception("Not found mypy in pre-commit")
+    raise ValueError("Not found mypy in pre-commit")
     # {'hooks': [{'additional_dependencies': ['python-telegram-bot==20.3',
     #                                     'html5lib==1.1',
     #                                     'pytz==2022.5',
@@ -94,15 +93,15 @@ def design_pre_commit(pre_commit: dict) -> dict:
 
 
 def write_new_mypy(index_mypy: int, hook: list) -> None:
-    with open(".pre-commit-config.yaml") as fp:
-        pre_commit: dict = yaml.safe_load(fp)
+    with open(".pre-commit-config.yaml", encoding="utf-8") as file:
+        pre_commit: dict = yaml.safe_load(file)
 
     pre_commit["repos"][index_mypy] = hook
 
     pre_commit = design_pre_commit(pre_commit)
 
-    with open(".pre-commit-config.yaml", "w") as fp:
-        yaml.safe_dump(pre_commit, fp, sort_keys=False)
+    with open(".pre-commit-config.yaml", "w", encoding="utf-8") as file:
+        yaml.safe_dump(pre_commit, file, sort_keys=False)
 
 
 def change_mypy_versions(

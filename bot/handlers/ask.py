@@ -15,6 +15,14 @@ from bot.utils import user_manager
 from bot.utils.logs import log_message
 
 
+class QuestionType:
+    type_ = 0
+    age = 1
+    amount = 2
+    location = 3
+    props = 4
+
+
 def get_answer_id(msg: str, lang: int) -> Optional[int]:
     # always return -1 if msg is not in choices
     choices: Dict[str, int] = {
@@ -44,9 +52,9 @@ async def read_answer(update: Update, question_num: int):
     lang = get_lang(update)
 
     answer_id = get_answer_id(update.message.text, lang)
-    if answer_id is not None:
-        user_manager.current_users[chat_id].take_answer(question_num, answer_id) # TODO user_manager.take_answer(chat_id, question_num, answer_id)
-        # TODO question_num -> Enum with questions (type, age, count, place, props)
+    user_manager.take_answer(chat_id, question_num, answer_id)
+    # TODO user_manager.take_answer(chat_id, question_num, answer_id)(completed)
+    # TODO question_num -> Enum with questions (type, age, count, place, props)(completed)
 
 
 async def ask_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -69,7 +77,7 @@ async def ask_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def read_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_num=0)
+    await read_answer(update, question_num=QuestionType.type_)
     return await ask_age(update, context)
 
 
@@ -85,7 +93,7 @@ async def ask_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def read_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_num=1)
+    await read_answer(update, question_num=QuestionType.age)
     return await ask_amount(update, context)
 
 
@@ -103,7 +111,7 @@ async def ask_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def read_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_num=2)
+    await read_answer(update, question_num=QuestionType.amount)
     return await ask_location(update, context)
 
 
@@ -121,7 +129,7 @@ async def ask_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def read_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_num=3)
+    await read_answer(update, question_num=QuestionType.location)
     return await ask_props(update, context)
 
 
@@ -142,7 +150,7 @@ async def ask_props(
 
 async def read_props(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_num=4)
+    await read_answer(update, question_num=QuestionType.props)
     return await result(update, context)
 
 

@@ -1,4 +1,5 @@
 from typing import Dict
+from typing import Optional
 
 from loguru import logger
 
@@ -23,9 +24,6 @@ class User:
     def set_flag(self, flag: int):
         self.flag = flag
 
-    def take_answer(self, question_num: int, answer: int):
-        self.answers[question_num] = answer
-
 
 class UserManager:
     """manage iser during registration process"""
@@ -44,6 +42,9 @@ class UserManager:
             del self.current_users[chat_id]
         else:
             logger.warning(f"[WARNING]DELETING UNEXISTING USER {chat_id}")
+
+    def take_answer(self, chat_id: int, question_num: int, answer: Optional[int]):
+        self.current_users[chat_id].answers[question_num] = answer
 
 
 user_manager = UserManager()
