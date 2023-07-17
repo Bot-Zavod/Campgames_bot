@@ -13,14 +13,7 @@ from bot.utils import State
 from bot.utils import User
 from bot.utils import user_manager
 from bot.utils.logs import log_message
-
-
-class QuestionType:
-    type_ = 0
-    age = 1
-    amount = 2
-    location = 3
-    props = 4
+from bot.utils.user_manager import QuestionType
 
 
 def get_answer_id(msg: str, lang: int) -> Optional[int]:
@@ -47,14 +40,12 @@ def get_answer_id(msg: str, lang: int) -> Optional[int]:
     return choices.get(msg)
 
 
-async def read_answer(update: Update, question_num: int):
+async def read_answer(update: Update, question_type: QuestionType):
     chat_id = update.message.chat.id
     lang = get_lang(update)
 
     answer_id = get_answer_id(update.message.text, lang)
-    user_manager.take_answer(chat_id, question_num, answer_id)
-    # TODO user_manager.take_answer(chat_id, question_num, answer_id)(completed)
-    # TODO question_num -> Enum with questions (type, age, count, place, props)(completed)
+    user_manager.take_answer(chat_id, question_type, answer_id)
 
 
 async def ask_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -77,7 +68,7 @@ async def ask_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def read_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_num=QuestionType.type_)
+    await read_answer(update, question_type=QuestionType.TYPE)
     return await ask_age(update, context)
 
 
@@ -93,7 +84,7 @@ async def ask_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def read_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_num=QuestionType.age)
+    await read_answer(update, question_type=QuestionType.AGE)
     return await ask_amount(update, context)
 
 
@@ -111,7 +102,7 @@ async def ask_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def read_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_num=QuestionType.amount)
+    await read_answer(update, question_type=QuestionType.AMOUNT)
     return await ask_location(update, context)
 
 
@@ -129,7 +120,7 @@ async def ask_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def read_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_num=QuestionType.location)
+    await read_answer(update, question_type=QuestionType.LOCATION)
     return await ask_props(update, context)
 
 
@@ -150,7 +141,7 @@ async def ask_props(
 
 async def read_props(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_num=QuestionType.props)
+    await read_answer(update, question_type=QuestionType.PROPS)
     return await result(update, context)
 
 
@@ -158,7 +149,7 @@ async def result(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat.id
     lang = get_lang(update)
     answers = user_manager.current_users[chat_id].answers
-    games = db_interface.get_game_names(*answers)
+    games = db_interface.get_game_names(*answers.values())
 
     reply_keyboard = [[game_name[lang + 1]] for game_name in games]
     reply_keyboard.append([text["back"][lang], text["menu"][lang]])

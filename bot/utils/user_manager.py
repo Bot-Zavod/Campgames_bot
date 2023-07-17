@@ -1,9 +1,18 @@
+from enum import Enum
 from typing import Dict
 from typing import Optional
 
 from loguru import logger
 
 from bot.database import db_interface
+
+
+class QuestionType(str, Enum):
+    TYPE = "type"
+    AGE = "age"
+    AMOUNT = "amount"
+    LOCATION = "location"
+    PROPS = "props"
 
 
 class User:
@@ -13,7 +22,13 @@ class User:
         self.chat_id: int = chat_id
         self.username: str = username
         self.lang: int = db_interface.get_language(self.chat_id)
-        self.answers: list = [None, None, None, None, None]
+        self.answers: Dict[QuestionType, Optional[int]] = {
+            QuestionType.TYPE: None,
+            QuestionType.AGE: None,
+            QuestionType.AMOUNT: None,
+            QuestionType.LOCATION: None,
+            QuestionType.PROPS: None,
+        }
 
     def __repr__(self):
         return f"User {self.username} with chat id: {self.chat_id}"
@@ -43,8 +58,10 @@ class UserManager:
         else:
             logger.warning(f"[WARNING]DELETING UNEXISTING USER {chat_id}")
 
-    def take_answer(self, chat_id: int, question_num: int, answer: Optional[int]):
-        self.current_users[chat_id].answers[question_num] = answer
+    def take_answer(
+        self, chat_id: int, question_type: QuestionType, answer: Optional[int]
+    ):
+        self.current_users[chat_id].answers[question_type] = answer
 
 
 user_manager = UserManager()
