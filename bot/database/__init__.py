@@ -66,6 +66,7 @@ class DBSession:
     @local_session
     def get_random_game_description(self, session, lang_ru: int = 0) -> str:
         """returns random game description by lang"""
+        # TODO: prevent error when db is empty
         if not lang_ru:
             query = session.query(Game.description_ru)
         else:

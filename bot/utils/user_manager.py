@@ -61,7 +61,8 @@ class UserManager:
     def take_answer(
         self, chat_id: int, question_type: QuestionType, answer: Optional[int]
     ):
-        self.current_users[chat_id].answers[question_type] = answer
+        user = self.current_users[chat_id]
+        user.answers[question_type] = answer
 
 
 user_manager = UserManager()

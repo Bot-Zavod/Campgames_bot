@@ -40,7 +40,7 @@ def get_answer_id(msg: str, lang: int) -> Optional[int]:
     return choices.get(msg)
 
 
-async def read_answer(update: Update, question_type: QuestionType):
+async def save_answer(update: Update, question_type: QuestionType):
     chat_id = update.message.chat.id
     lang = get_lang(update)
 
@@ -68,7 +68,7 @@ async def ask_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def read_type(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_type=QuestionType.TYPE)
+    await save_answer(update, question_type=QuestionType.TYPE)
     return await ask_age(update, context)
 
 
@@ -84,7 +84,7 @@ async def ask_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def read_age(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_type=QuestionType.AGE)
+    await save_answer(update, question_type=QuestionType.AGE)
     return await ask_amount(update, context)
 
 
@@ -102,7 +102,7 @@ async def ask_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def read_amount(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_type=QuestionType.AMOUNT)
+    await save_answer(update, question_type=QuestionType.AMOUNT)
     return await ask_location(update, context)
 
 
@@ -120,7 +120,7 @@ async def ask_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def read_location(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_type=QuestionType.LOCATION)
+    await save_answer(update, question_type=QuestionType.LOCATION)
     return await ask_props(update, context)
 
 
@@ -141,7 +141,7 @@ async def ask_props(
 
 async def read_props(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    await read_answer(update, question_type=QuestionType.PROPS)
+    await save_answer(update, question_type=QuestionType.PROPS)
     return await result(update, context)
 
 
@@ -149,7 +149,13 @@ async def result(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat.id
     lang = get_lang(update)
     answers = user_manager.current_users[chat_id].answers
-    games = db_interface.get_game_names(*answers.values())
+    games = db_interface.get_game_names(
+        game_type=answers[QuestionType.TYPE],
+        kids_age=answers[QuestionType.AGE],
+        kids_amount=answers[QuestionType.AMOUNT],
+        location=answers[QuestionType.LOCATION],
+        props=answers[QuestionType.PROPS],
+    )
 
     reply_keyboard = [[game_name[lang + 1]] for game_name in games]
     reply_keyboard.append([text["back"][lang], text["menu"][lang]])
