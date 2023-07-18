@@ -45,7 +45,7 @@ On a AWS Ubuntu 18.04 new machine, below installations are required:
 Launch project:
 ===============
 * `git clone --recurse-submodules https://repo.url repo` - clone repo
-* `cd repo` - move to project directory
+* `cd campgames_bot` - move to project directory
 * `cp .env.example .env` - create your .env file and insert your values
 * `poetry install`
 * `poetry shell` - run virtualenv shell
