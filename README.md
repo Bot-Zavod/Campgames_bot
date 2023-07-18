@@ -49,7 +49,7 @@ Launch project:
 * `cp .env.example .env` - create your .env file and insert your values
 * `poetry install`
 * `poetry shell` - run virtualenv shell
-* `python3 -m src` - run as python module from top src directory to acsess database layer
+* `python3 -m bot` - run as python module from top src directory to acsess database layer
 
 ### Run with docker
 * `docker volume create campgames-volume`
