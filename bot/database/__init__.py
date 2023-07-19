@@ -24,12 +24,13 @@ class DBSession:
     ) -> list:
         """list of games by requested parameters"""
 
-        games = session.query(Game.id, Game.name_ru, Game.name_en)
+        games = session.query(Game.id, Game.name)
 
         if game_type is not None:
             games = games.filter(
                 or_(Game.game_type.contains(f"%{game_type}%"), Game.game_type.is_(None))
             )
+
         if kids_amount is not None:
             games = games.filter(
                 or_(
@@ -37,32 +38,33 @@ class DBSession:
                     Game.kids_amount.is_(None),
                 )
             )
+
         if location is not None:
             games = games.filter(
                 or_(Game.location.contains(f"%{location}%"), Game.location.is_(None))
             )
+
         if props is not None:
             games = games.filter(
                 or_(Game.props.contains(f"%{props}%"), Game.props.is_(None))
             )
-        if kids_age == 0:
-            kids_age = 2
-        print(games.all())
+
         if kids_age is not None:
             games = games.filter(
-                or_(Game.kids_age.contains(f"%{kids_age}%"), Game.kids_age.is_(None))
+                or_(Game.kids_age.contains(kids_age), Game.kids_age.is_(None))
             )
-        print(games.all())
         return games.all()
 
     @local_session
-    def get_game_description(self, session, name: str, lang_ru: int = 0) -> str:
+    def get_game_description(self, session, name: str) -> str:
         """returns game description by it's name and lang"""
 
-        game_data = (
+        game_data = [Game.description, Game.name]
+
+        """game_data = (
             [Game.description_ru, Game.name_ru],
             [Game.description_en, Game.name_en],
-        )[lang_ru]
+        )[lang_ru]"""
         description = session.query(game_data[0]).filter(game_data[1] == name).first()
         return description[0] if description else ""
 
@@ -72,11 +74,11 @@ class DBSession:
         # TODO: prevent error when db is empty(completed)
         """if not lang_ru:
             query = session.query(Game.description_ru)"""
-        query = session.query(Game.description_en)
+        query = session.query(Game.description)
         game = query.filter(Game.id == randint(1, session.query(Game).count())).first()
         return game[0]
 
-    @local_session
+    """@local_session
     def get_all_games(self, session) -> list:
         games = session.query(
             Game.name_ru,
@@ -89,7 +91,7 @@ class DBSession:
             Game.location,
             Game.props,
         ).all()
-        return games
+        return games"""
 
     @local_session
     def delete_games(self, session) -> int:
@@ -100,17 +102,26 @@ class DBSession:
 
     @local_session
     def set_games(self, session, games: list):
+        """
+        name_ru=game[0],
+        name_en=game[1],
+        description_ru=game[2],
+        description_en=game[3],
+        game_type=game[4],
+        kids_age=game[5],
+        kids_amount=game[6],
+        location=game[7],
+        props=game[8],
+        """
         objects = [
             Game(
-                name_ru=game[0],
-                name_en=game[1],
-                description_ru=game[2],
-                description_en=game[3],
-                game_type=game[4],
-                kids_age=game[5],
-                kids_amount=game[6],
-                location=game[7],
-                props=game[8],
+                name=game[0][: game[0].find("\n")],
+                description=game[0],
+                game_type=game[1],
+                kids_amount=game[2],
+                kids_age=game[3],
+                location=game[4],
+                props=game[5],
             )
             for game in games
         ]

@@ -16,26 +16,26 @@ from bot.utils.logs import log_message
 from bot.utils.user_manager import QuestionType
 
 
-def get_answer_id(msg: str, lang: int) -> Optional[int]:
+def get_answer_id(msg: str, lang: int) -> Optional[str]:
     # always return -1 if msg is not in choices
-    choices: Dict[str, int] = {
+    choices: Dict[str, str] = {
         # type
-        text["team_building"][lang]: 0,
-        text["ice_breaker"][lang]: 1,
-        text["timefiller"][lang]: 2,
+        text["team_building"][lang]: "Teambuilding",
+        text["ice_breaker"][lang]: "warm ups",
+        text["timefiller"][lang]: "Timefillers",
         # age
-        text["6-12"][lang]: 0,
-        text["12+"][lang]: 1,
+        text["6-12"][lang]: "6-12",
+        text["12+"][lang]: "12+",
         # count
-        text["up to 5"][lang]: 0,
-        text["5-20"][lang]: 1,
-        text["20+"][lang]: 2,
+        text["up to 5"][lang]: "up to 5",
+        text["5-20"][lang]: "5-20",
+        text["20+"][lang]: "20+",
         # place
-        text["outside"][lang]: 0,
-        text["inside"][lang]: 1,
+        text["outside"][lang]: "outside",
+        text["inside"][lang]: "inside",
         # props
-        text["no"][lang]: 0,
-        text["yes"][lang]: 1,
+        text["no"][lang]: "no",
+        text["yes"][lang]: "yes",
     }
     return choices.get(msg)
 
@@ -156,8 +156,7 @@ async def result(update: Update, context: ContextTypes.DEFAULT_TYPE):
         location=answers[QuestionType.LOCATION],
         props=answers[QuestionType.PROPS],
     )
-
-    reply_keyboard = [[game_name[lang + 1]] for game_name in games]
+    reply_keyboard = [[game_name[lang]] for game_name in games]
     reply_keyboard.append([text["back"][lang], text["menu"][lang]])
     await send_msg_with_keyboard(update, context, text["answer"][lang], reply_keyboard)
     return State.ANSWER
@@ -174,7 +173,7 @@ async def final_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
         return await start_query(update, context)
     user_manager.current_users[chat_id].set_flag(7)
 
-    description = db_interface.get_game_description(massage, lang)
+    description = db_interface.get_game_description(massage)
     reply_keyboard = [[text["back"][lang], text["menu"][lang]]]
     await send_msg_with_keyboard(update, context, description, reply_keyboard)
     return State.BACK_ANSWER

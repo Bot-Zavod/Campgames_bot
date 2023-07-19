@@ -44,11 +44,12 @@ class Game(Base):
     __tablename__ = "game"
 
     id = Column(Integer, primary_key=True)
-    name_ru = Column(String)
+    """name_ru = Column(String)
     name_en = Column(String)
     description_ru = Column(String)
-    description_en = Column(String)
-
+    description_en = Column(String)"""
+    name = Column(String)
+    description = Column(String)
     game_type = Column(String)
     kids_age = Column(String)
     kids_amount = Column(String)

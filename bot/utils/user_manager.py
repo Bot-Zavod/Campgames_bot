@@ -22,7 +22,7 @@ class User:
         self.chat_id: int = chat_id
         self.username: str = username
         self.lang: int = db_interface.get_language(self.chat_id)
-        self.answers: Dict[QuestionType, Optional[int]] = {
+        self.answers: Dict[QuestionType, Optional[str]] = {
             QuestionType.TYPE: None,
             QuestionType.AGE: None,
             QuestionType.AMOUNT: None,
@@ -59,7 +59,7 @@ class UserManager:
             logger.warning(f"[WARNING]DELETING UNEXISTING USER {chat_id}")
 
     def take_answer(
-        self, chat_id: int, question_type: QuestionType, answer: Optional[int]
+        self, chat_id: int, question_type: QuestionType, answer: Optional[str]
     ):
         user = self.current_users[chat_id]
         user.answers[question_type] = answer

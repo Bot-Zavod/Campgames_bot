@@ -26,14 +26,14 @@ def spreadsheet() -> gspread.Worksheet:
     # the spreadsheet's url)
     sheet = client.open_by_key(table)
     # Select worksheet by index. Worksheet indexes start from zero
-    worksheet = sheet.get_worksheet(0)
+    worksheet = sheet.get_worksheet(1)
     return worksheet
 
 
-def update_spreadsheet_from_db() -> None:
+"""def update_spreadsheet_from_db() -> None:
     worksheet = spreadsheet()
     games = db_interface.get_all_games()
-    worksheet.update(f"A2:I{len(games)+1}", games)  # except headings
+    worksheet.update(f"A2:I{len(games)+1}", games)  # except headings"""
 
 
 def update_games_in_db() -> Tuple[int, int]:
