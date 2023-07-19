@@ -80,7 +80,14 @@ def design_pre_commit(pre_commit: dict) -> dict:
 
             reverse_dependencies = {}
             # change dependencies in reverse function
+            check = True
             for dependency in reversed(hook[reverse_hook][0]):
+                #if first reverse key is 'additional_dependencies', 
+                # that means that is good balance and them don't need to reverse keys
+                if dependency=='additional_dependencies' and check:
+                    reverse_dependencies = hook[reverse_hook][0]
+                    break
+                
                 reverse_dependencies[dependency] = hook[reverse_hook][0][dependency]
 
             hook[reverse_hook][0] = reverse_dependencies
