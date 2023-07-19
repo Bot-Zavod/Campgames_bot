@@ -10,23 +10,24 @@ from bot.data import text
 from bot.handlers import admin
 from bot.handlers import admin_password
 from bot.handlers import ask
-from bot.handlers import ask_lang
 from bot.handlers import check_id
 from bot.handlers import check_password
 from bot.handlers import check_time
 from bot.handlers import new_password
 from bot.handlers import rand
-from bot.handlers import set_lang
 from bot.handlers import start
 from bot.handlers import start_query
 from bot.handlers import stop_bot
 from bot.handlers import update_games
 from bot.utils import State
 
+# from bot.handlers import ask_lang
+# from bot.handlers import set_lang
+
 admin_filters = filters.User(ADMINS) & filters.ChatType.PRIVATE
 
 commands = [
-    CommandHandler("language", ask_lang),
+    # CommandHandler("language", ask_lang),
     CommandHandler("id", check_id),
     CommandHandler("time", check_time),
 ]
@@ -56,16 +57,14 @@ conversation_handler = ConversationHandler(
         State.GAMES: [
             MessageHandler(filters.Text(list(text["games"].values())), ask.ask_type),
             MessageHandler(filters.Text(list(text["random"].values())), rand),
-            MessageHandler(filters.Text(list(text["ask_lang"].values())), ask_lang),
+            # MessageHandler(filters.Text(list(text["ask_lang"].values())), ask_lang),
             # CommandHandler("language", ask_lang),
         ],
         ##################
         # Questions ######
         ##################
         State.CHECK_PASSWORD: [MessageHandler(filters.TEXT, check_password)],
-        State.CHOOSE_LANG: [
-            MessageHandler(filters.Text(list(text["langs"].values())), set_lang)
-        ],
+        # State.CHOOSE_LANG: [MessageHandler(filters.Text(list(text["langs"].values())), set_lang)],
         State.READ_TYPE: [
             back_handler(start_query),
             MessageHandler(filters.TEXT, ask.read_type),
@@ -114,9 +113,7 @@ admin_handler = ConversationHandler(
             MessageHandler(filters.Text(list(text["update"].values())), update_games),
         ],
         State.ADMIN_PASSWORD: [MessageHandler(filters.TEXT, new_password)],
-        State.CHOOSE_LANG: [
-            MessageHandler(filters.Text(list(text["langs"].values())), set_lang)
-        ],
+        # State.CHOOSE_LANG: [MessageHandler(filters.Text(list(text["langs"].values())), set_lang)],
         State.CHECK_PASSWORD: [MessageHandler(filters.TEXT, check_password)],
     },
     fallbacks=[CommandHandler("stop", stop_bot)],

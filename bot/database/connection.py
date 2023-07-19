@@ -38,7 +38,11 @@ def local_session(function):
     def wrapped(self, *args, **kwargs):
         session = Session()
         try:
-            result = function(self, session, *args, **kwargs)
+            try:
+                result = function(self, session, *args, **kwargs)
+            except ValueError:
+                session.close()
+                return None
         except Exception as error:
             # in case commit wan't be rolled back next trasaction failed
             session.rollback()

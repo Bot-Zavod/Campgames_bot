@@ -7,6 +7,7 @@ from telegram.ext import ContextTypes
 from bot.admins import ADMINS
 from bot.config import settings
 from bot.data import text
+from bot.handlers.handlers import set_lang
 from bot.password import get_password
 from bot.password import write_password
 from bot.utils import get_lang
@@ -35,6 +36,8 @@ def restrict_user(func):
 async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
     lang = get_lang(update)
+    if lang is None:
+        lang = await set_lang(update, context)
     password = get_password()
     reply_keyboard = [
         [text["update"][lang]],

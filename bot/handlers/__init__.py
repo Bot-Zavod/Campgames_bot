@@ -10,7 +10,6 @@ from .ask import read_location
 from .ask import read_props
 from .ask import read_type
 from .ask import result
-from .handlers import ask_lang
 from .handlers import ask_password
 from .handlers import check_id
 from .handlers import check_password
@@ -21,3 +20,5 @@ from .handlers import set_lang
 from .handlers import start
 from .handlers import start_query
 from .handlers import stop_bot
+
+# from .handlers import ask_lang

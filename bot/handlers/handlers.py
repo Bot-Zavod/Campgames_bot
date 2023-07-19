@@ -5,7 +5,6 @@ import traceback
 from datetime import datetime
 
 from loguru import logger
-from telegram import ReplyKeyboardMarkup
 from telegram import ReplyKeyboardRemove
 from telegram import Update
 from telegram.ext import ContextTypes
@@ -19,6 +18,24 @@ from bot.password import validate_password
 from bot.utils import State
 from bot.utils.logs import log_message
 
+# from telegram import ReplyKeyboardMarkup
+
+
+async def set_lang(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
+    log_message(update)
+    chat_id = update.message.chat.id
+    db_interface.set_language(chat_id, 1)
+    return 1
+    """langs = {text["langs"][0]: 0, text["langs"][1]: 1}
+    lang = langs.get(update.message.text, None)
+    if lang is None:
+        return await ask_lang(update, context)
+
+
+    if not db_interface.check_user(chat_id):
+        return await ask_password(update, context)
+    return await start(update, context)"""
+
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """check if user is authorized and have language"""
@@ -28,7 +45,7 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     lang = db_interface.get_language(chat_id)
 
     if lang is None:
-        return await ask_lang(update, context)
+        await set_lang(update, context)
     if not db_interface.check_user(chat_id):
         return await ask_password(update, context)
 
@@ -40,10 +57,16 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def rand(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    lang = db_interface.get_language(update.message.chat.id)
-    random_game = db_interface.get_random_game_description(lang)
+    # lang = db_interface.get_language(update.message.chat.id)
+    random_game = db_interface.get_random_game_description()
     chat_id = update.message.chat.id
-    await context.bot.send_message(chat_id=chat_id, text=random_game)
+    if not random_game:
+        await context.bot.send_message(
+            chat_id=chat_id,
+            text="database is empty, please go to the admin console to refresh database",
+        )
+    else:
+        await context.bot.send_message(chat_id=chat_id, text=random_game)
 
 
 async def stop_bot(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -58,7 +81,7 @@ async def stop_bot(update: Update, context: ContextTypes.DEFAULT_TYPE):
 ################################
 
 
-async def ask_lang(update: Update, context: ContextTypes.DEFAULT_TYPE):
+"""async def ask_lang(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
     chat_id = update.message.chat.id
     reply_keyboard = [[text["langs"][0]], [text["langs"][1]]]
@@ -72,22 +95,7 @@ async def ask_lang(update: Update, context: ContextTypes.DEFAULT_TYPE):
     else:
         ask_text += text["ask_lang"][0]  # + "\n" + text["ask_lang"][1]
     await context.bot.send_message(chat_id=chat_id, text=ask_text, reply_markup=markup)
-    return State.CHOOSE_LANG
-
-
-async def set_lang(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    log_message(update)
-    chat_id = update.message.chat.id
-
-    langs = {text["langs"][0]: 0, text["langs"][1]: 1}
-    lang = langs.get(update.message.text, None)
-    if lang is None:
-        return await ask_lang(update, context)
-    db_interface.set_language(chat_id, lang)
-
-    if not db_interface.check_user(chat_id):
-        return await ask_password(update, context)
-    return await start(update, context)
+    return State.CHOOSE_LANG"""
 
 
 ################################

@@ -30,10 +30,6 @@ class DBSession:
             games = games.filter(
                 or_(Game.game_type.contains(f"%{game_type}%"), Game.game_type.is_(None))
             )
-        if kids_age is not None:
-            games = games.filter(
-                or_(Game.kids_age.contains(f"%{kids_age}%"), Game.kids_age.is_(None))
-            )
         if kids_amount is not None:
             games = games.filter(
                 or_(
@@ -49,7 +45,14 @@ class DBSession:
             games = games.filter(
                 or_(Game.props.contains(f"%{props}%"), Game.props.is_(None))
             )
-
+        if kids_age == 0:
+            kids_age = 2
+        print(games.all())
+        if kids_age is not None:
+            games = games.filter(
+                or_(Game.kids_age.contains(f"%{kids_age}%"), Game.kids_age.is_(None))
+            )
+        print(games.all())
         return games.all()
 
     @local_session
@@ -64,13 +67,12 @@ class DBSession:
         return description[0] if description else ""
 
     @local_session
-    def get_random_game_description(self, session, lang_ru: int = 0) -> str:
+    def get_random_game_description(self, session) -> str:  # lang_ru: int = 0
         """returns random game description by lang"""
-        # TODO: prevent error when db is empty
-        if not lang_ru:
-            query = session.query(Game.description_ru)
-        else:
-            query = session.query(Game.description_en)
+        # TODO: prevent error when db is empty(completed)
+        """if not lang_ru:
+            query = session.query(Game.description_ru)"""
+        query = session.query(Game.description_en)
         game = query.filter(Game.id == randint(1, session.query(Game).count())).first()
         return game[0]
 
