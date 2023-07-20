@@ -174,6 +174,9 @@ async def final_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_manager.current_users[chat_id].set_flag(7)
 
     description = db_interface.get_game_description(massage)
+    if description.find("\n") != -1:
+        index = description.find("\n")
+        description = f"<b>{description[:index]}</b>" + description[index:]
     reply_keyboard = [[text["back"][lang], text["menu"][lang]]]
     await send_msg_with_keyboard(update, context, description, reply_keyboard)
     return State.BACK_ANSWER

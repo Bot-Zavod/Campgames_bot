@@ -66,7 +66,12 @@ async def rand(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text="database is empty, please go to the admin console to refresh database",
         )
     else:
-        await context.bot.send_message(chat_id=chat_id, text=random_game)
+        if random_game.find("\n") != -1:
+            index = random_game.find("\n")
+            random_game = f"<b>{random_game[:index]}</b>" + random_game[index:]
+        await context.bot.send_message(
+            chat_id=chat_id, text=random_game, parse_mode="HTML"
+        )
 
 
 async def stop_bot(update: Update, context: ContextTypes.DEFAULT_TYPE):

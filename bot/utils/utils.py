@@ -10,7 +10,9 @@ async def send_msg_with_keyboard(
 ):
     markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
     chat_id = update.message.chat.id
-    await context.bot.send_message(chat_id=chat_id, text=msg, reply_markup=markup)
+    await context.bot.send_message(
+        chat_id=chat_id, text=msg, reply_markup=markup, parse_mode="HTML"
+    )
 
 
 def get_lang(update: Update) -> int:
