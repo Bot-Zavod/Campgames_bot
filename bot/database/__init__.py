@@ -157,21 +157,21 @@ class DBSession:
             return user.is_registered
         return False
 
-    '''@local_session
+    """@local_session
     def get_language(self, session, chat_id: int) -> Optional[int]:
         user = session.query(User).get(chat_id)
         if user:
             return user.language
-        return None'''
+        return None"""
 
-    '''@local_session
+    """@local_session
     def set_language(self, session, chat_id: int, lang: int):
         user = session.query(User).get(chat_id)
         if not user:
             user = self.create_user(chat_id, lang)
         else:
             user.language = lang
-            session.commit()'''
+            session.commit()"""
 
 
 db_interface = DBSession()

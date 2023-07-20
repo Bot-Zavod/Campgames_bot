@@ -40,7 +40,7 @@ from bot.utils.logs import log_message
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """check if user is authorized and have language"""
 
-    '''log_message(update)
+    """log_message(update)
     chat_id = update.message.chat.id
     lang = db_interface.get_language(chat_id)
 
@@ -51,8 +51,8 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await context.bot.send_message(
         chat_id=chat_id, text=text["start"][lang], reply_markup=ReplyKeyboardRemove()
-    )'''
-    
+    )"""
+
     log_message(update)
     chat_id = update.message.chat.id
 
@@ -120,23 +120,25 @@ async def stop_bot(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def ask_password(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat_id = update.message.chat.id
-    #lang = db_interface.get_language(chat_id)
-    #await context.bot.send_message(chat_id=chat_id, text=text["ask_pass"][lang], reply_markup=ReplyKeyboardRemove())
-    await context.bot.send_message(chat_id=chat_id, text=text["ask_pass"], reply_markup=ReplyKeyboardRemove())
+    # lang = db_interface.get_language(chat_id)
+    # await context.bot.send_message(chat_id=chat_id, text=text["ask_pass"][lang], reply_markup=ReplyKeyboardRemove())
+    await context.bot.send_message(
+        chat_id=chat_id, text=text["ask_pass"], reply_markup=ReplyKeyboardRemove()
+    )
     return State.CHECK_PASSWORD
 
 
 async def check_password(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
     chat_id = update.message.chat.id
-    #lang = db_interface.get_language(chat_id)
+    # lang = db_interface.get_language(chat_id)
 
-    '''if validate_password(update.message.text):
+    """if validate_password(update.message.text):
         db_interface.authorize_user(chat_id)
         await context.bot.send_message(chat_id=chat_id, text=text["pass_success"][lang])
         return await start_query(update, context)
 
-    await context.bot.send_message(chat_id=chat_id, text=text["pass_wrong"][lang])'''
+    await context.bot.send_message(chat_id=chat_id, text=text["pass_wrong"][lang])"""
     if validate_password(update.message.text):
         db_interface.authorize_user(chat_id)
         await context.bot.send_message(chat_id=chat_id, text=text["pass_success"])

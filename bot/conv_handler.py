@@ -44,7 +44,7 @@ commands = [
 
 
 def back_handler(callback: Callable) -> MessageHandler:
-    #return MessageHandler(filters.Text(list(text["back"].values())), callback)
+    # return MessageHandler(filters.Text(list(text["back"].values())), callback)
     return MessageHandler(filters.Text(text["back"]), callback)
 
 
@@ -94,7 +94,7 @@ conversation_handler = ConversationHandler(
         ],
         State.BACK_ANSWER: [
             back_handler(ask.result),
-            #MessageHandler(filters.Text(list(text["menu"].values())), start_query),
+            # MessageHandler(filters.Text(list(text["menu"].values())), start_query),
             MessageHandler(filters.Text(text["menu"]), start_query),
         ],
     },
@@ -112,10 +112,11 @@ admin_handler = ConversationHandler(
         # -----------------------------------------------------------
         State.ADMIN: [
             MessageHandler(
-                #filters.Text(list(text["change_password"].values())), admin_password
-                filters.Text(text["change_password"]), admin_password
+                # filters.Text(list(text["change_password"].values())), admin_password
+                filters.Text(text["change_password"]),
+                admin_password,
             ),
-            #MessageHandler(filters.Text(list(text["update"].values())), update_games),
+            # MessageHandler(filters.Text(list(text["update"].values())), update_games),
             MessageHandler(filters.Text(text["update"]), update_games),
         ],
         State.ADMIN_PASSWORD: [MessageHandler(filters.TEXT, new_password)],

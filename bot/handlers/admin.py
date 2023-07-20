@@ -7,13 +7,14 @@ from telegram.ext import ContextTypes
 from bot.admins import ADMINS
 from bot.config import settings
 from bot.data import text
-#from bot.handlers.handlers import set_lang
 from bot.password import get_password
 from bot.password import write_password
-#from bot.utils import get_lang
 from bot.utils import State
 from bot.utils import update_games_in_db
 from bot.utils.logs import log_message
+
+# from bot.handlers.handlers import set_lang
+# from bot.utils import get_lang
 
 
 GAMES_TABLE_KEY = settings.GAMES_TABLE_KEY
@@ -24,9 +25,9 @@ def restrict_user(func):
     async def wrapper(update: Update, context: ContextTypes.DEFAULT_TYPE):
         if update.message.chat.id in ADMINS:
             return await func(update, context)
-        #lang = get_lang(update)
+        # lang = get_lang(update)
         chat_id = update.message.chat.id
-        #await context.bot.send_message(chat_id=chat_id, text=text["sorry"][lang])
+        # await context.bot.send_message(chat_id=chat_id, text=text["sorry"][lang])
         await context.bot.send_message(chat_id=chat_id, text=text["sorry"])
         return None
 
@@ -36,8 +37,8 @@ def restrict_user(func):
 @restrict_user
 async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    #lang = get_lang(update)
-    '''if lang is None:
+    # lang = get_lang(update)
+    """if lang is None:
         lang = await set_lang(update, context)
     password = get_password()
     reply_keyboard = [
@@ -49,8 +50,8 @@ async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(
         chat_id=chat_id, text=text["hi_boss"][lang] + password, reply_markup=markup
     )
-    return State.ADMIN'''
-    
+    return State.ADMIN"""
+
     password = get_password()
     reply_keyboard = [
         [text["update"]],
@@ -80,9 +81,9 @@ async def update_games(update: Update, context: ContextTypes.DEFAULT_TYPE):
 @restrict_user
 async def admin_password(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    #lang = get_lang(update)
+    # lang = get_lang(update)
     chat_id = update.message.chat.id
-    #await context.bot.send_message(chat_id=chat_id, text=text["send_pass"][lang])
+    # await context.bot.send_message(chat_id=chat_id, text=text["send_pass"][lang])
     await context.bot.send_message(chat_id=chat_id, text=text["send_pass"])
     return State.ADMIN_PASSWORD
 
@@ -90,9 +91,11 @@ async def admin_password(update: Update, context: ContextTypes.DEFAULT_TYPE):
 @restrict_user
 async def new_password(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    #lang = get_lang(update)
+    # lang = get_lang(update)
     write_password(update.message.text)
     chat_id = update.message.chat.id
-    #await context.bot.send_message(chat_id=chat_id, text=text["new_pass"][lang] + update.message.text)
-    await context.bot.send_message(chat_id=chat_id, text=text["new_pass"] + update.message.text)
+    # await context.bot.send_message(chat_id=chat_id, text=text["new_pass"][lang] + update.message.text)
+    await context.bot.send_message(
+        chat_id=chat_id, text=text["new_pass"] + update.message.text
+    )
     return await admin(update, context)
