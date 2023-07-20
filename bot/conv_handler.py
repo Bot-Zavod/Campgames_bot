@@ -44,7 +44,8 @@ commands = [
 
 
 def back_handler(callback: Callable) -> MessageHandler:
-    return MessageHandler(filters.Text(list(text["back"].values())), callback)
+    #return MessageHandler(filters.Text(list(text["back"].values())), callback)
+    return MessageHandler(filters.Text(text["back"]), callback)
 
 
 conversation_handler = ConversationHandler(
@@ -55,8 +56,10 @@ conversation_handler = ConversationHandler(
         # GAMES ##########
         ##################
         State.GAMES: [
-            MessageHandler(filters.Text(list(text["games"].values())), ask.ask_type),
-            MessageHandler(filters.Text(list(text["random"].values())), rand),
+            MessageHandler(filters.Text(text["games"]), ask.ask_type),
+            MessageHandler(filters.Text(text["random"]), rand),
+            # MessageHandler(filters.Text(list(text["games"].values())), ask.ask_type),
+            # MessageHandler(filters.Text(list(text["random"].values())), rand),
             # MessageHandler(filters.Text(list(text["ask_lang"].values())), ask_lang),
             # CommandHandler("language", ask_lang),
         ],
@@ -91,7 +94,8 @@ conversation_handler = ConversationHandler(
         ],
         State.BACK_ANSWER: [
             back_handler(ask.result),
-            MessageHandler(filters.Text(list(text["menu"].values())), start_query),
+            #MessageHandler(filters.Text(list(text["menu"].values())), start_query),
+            MessageHandler(filters.Text(text["menu"]), start_query),
         ],
     },
     fallbacks=[CommandHandler("stop", stop_bot)],
@@ -108,9 +112,11 @@ admin_handler = ConversationHandler(
         # -----------------------------------------------------------
         State.ADMIN: [
             MessageHandler(
-                filters.Text(list(text["change_password"].values())), admin_password
+                #filters.Text(list(text["change_password"].values())), admin_password
+                filters.Text(text["change_password"]), admin_password
             ),
-            MessageHandler(filters.Text(list(text["update"].values())), update_games),
+            #MessageHandler(filters.Text(list(text["update"].values())), update_games),
+            MessageHandler(filters.Text(text["update"]), update_games),
         ],
         State.ADMIN_PASSWORD: [MessageHandler(filters.TEXT, new_password)],
         # State.CHOOSE_LANG: [MessageHandler(filters.Text(list(text["langs"].values())), set_lang)],

@@ -1,162 +1,43 @@
 {
-  "server_error": {
-    "1": "An error occurred 🧨\n\nThe developer has already been notified 😉\n\nTry later 🕗",
-    "0": "Виникла помилка 🧨\n\nРозробник вже повідомлений 😉\n\nСпробуй пізніше 🕗"
-  },
-  "start": {
-    "1": "Hello\nI am Camp Games bot!\nI will help you to find a game for any occasion!",
-    "0": "Привет\nЯ - Camp Games бот!\nЯ помогу тебе найти игру на любой случай!"
-  },
-  "ask_lang": {
-    "1": "Choose the language",
-    "0": "Выбери язык"
-  },
-  "langs": {
-    "1": "English 🇬🇧",
-    "0": "Русский 🇷🇺"
-  },
-  "ask_pass": {
-    "1": "To enter, write me a password 🔏",
-    "0": "Что бы войти, напиши мне пароль🔏"
-  },
-  "pass_success": {
-    "1": "Enter successful 🔓",
-    "0": "Вход успешен🔓"
-  },
-  "pass_wrong": {
-    "1": "Access denied 🚫\nDon't know the password?\nAsk @lisatkachenko or write me again",
-    "0": "В доступе отказано🚫\nНе знаешь пароль?\nСпроси @lisatkachenko или попробуй ещё раз"
-  },
-  "unknown": {
-    "1": "Can't understand",
-    "0": "Не понимаю"
-  },
-  "update": {
-    "1": "Update games 🎲",
-    "0": "Обновить игры 🎲"
-  },
-  "change_password": {
-    "1": "Сhange password",
-    "0": "Изменить пароль"
-  },
-  "start_games": {
-    "1": "Press Games🎲 to find something or use random",
-    "0": " Нажми Игры🎲, что бы найти игру или выбери рандомную"
-  },
-  "games": {
-    "1": "Games🎲",
-    "0": "Игры🎲"
-  },
-  "random": {
-    "1": "Random💫",
-    "0": "Рандом💫"
-  },
-  "back": {
-    "1": "Back ↩️",
-    "0": "Назад ↩️"
-  },
-  "any": {
-    "1": "Any 🤷‍♂️",
-    "0": "Любое 🤷‍♂️"
-  },
-  "menu": {
-    "1": "Menu 🎸",
-    "0": "Меню 🎸"
-  },
-  "answer": {
-    "1": "Here is what I managed to find:",
-    "0": "Вот что мне удалось найти:"
-  },
-  "ask_type": {
-    "1": "What game do you need?",
-    "0": "Какую игру ищёшь?"
-  },
-  "team_building": {
-    "1": "Team building",
-    "0": "Тимбилдинг"
-  },
-  "ice_breaker": {
-    "1": "Warm ups & Ice break",
-    "0": "Разогрев & Айсбрейкер"
-  },
-  "timefiller": {
-    "1": "Timefillers",
-    "0": "Таймфиллеры"
-  },
-  "ask_age": {
-    "1": "How old are the children?",
-    "0": "Какой возраст детей?"
-  },
-  "6-12": {
-    "1": "6-12",
-    "0": "6-12"
-  },
-  "12+": {
-    "1": "12+",
-    "0": "12+"
-  },
-  "ask_amount": {
-    "1": "How many kids do you have?",
-    "0": "Сколько детей?"
-  },
-  "up to 5": {
-    "1": "up to 5",
-    "0": "до 5"
-  },
-  "5-20": {
-    "1": "5-20",
-    "0": "5-20"
-  },
-  "20+": {
-    "1": "20+",
-    "0": "20+"
-  },
-  "ask_location": {
-    "1": "Where are you?",
-    "0": "Где вы находитесь?"
-  },
-  "inside": {
-    "1": "Inside",
-    "0": "В помещении"
-  },
-  "outside": {
-    "1": "Outside",
-    "0": "На улице"
-  },
-  "ask_props": {
-    "1": "Do you have any props?",
-    "0": "Есть какой нибудь реквизит?"
-  },
-  "yes": {
-    "1": "Yes",
-    "0": "Да"
-  },
-  "no": {
-    "1": "No",
-    "0": "Нет"
-  },
-  "hi_boss": {
-    "1": "Hi boss\n\nexit to user mode with /stop\n\ncurrent password is\n\n",
-    "0": "Привет босс\n\nexit to user mode with /stop\n\nпароль на сегодня\n\n"
-  },
-  "change": {
-    "1": "Would you like to change it?",
-    "0": "Хочешь изменить пароль?"
-  },
-  "sorry": {
-    "1": "You are not my boss, maybe later...",
-    "0": "Сорри, но не ты здесь босс..."
-  },
-  "send_pass": {
-    "1": "Ok man, set the new PASSWORD",
-    "0": "Хорошо, введи новый ПАРОЛЬ"
-  },
-  "updated": {
-    "1": "Ok man, set the new PASSWORD",
-    "0": "Хорошо, введи новый ПАРОЛЬ"
-  },
-  "new_pass": {
-    "1": "New password is\n\n",
-    "0": "Новый пароль\n\n"
-  }
+    "server_error": "An error occurred 🧨\n\nThe developer has already been notified 😉\n\nTry later 🕗",
+    "start": "Hello\nI am Camp Games bot!\nI will help you to find a game for any occasion!",
+    "ask_lang": "Choose the language",
+    "langs": "English 🇬🇧",
+    "ask_pass": "To enter, write me a password 🔏",
+    "pass_success": "Enter successful 🔓",
+    "pass_wrong": "Access denied 🚫\nDon't know the password?\nAsk @lisatkachenko or write me again",
+    "unknown": "Can't understand",
+    "update": "Update games 🎲",
+    "change_password": "Сhange password",
+    "start_games": "Press Games🎲 to find something or use random",
+    "games": "Games🎲",
+    "random": "Random💫",
+    "back": "Back ↩️",
+    "any": "Any 🤷‍♂️",
+    "menu": "Menu 🎸",
+    "answer": "Here is what I managed to find:",
+    "ask_type": "What game do you need?",
+    "team_building": "Team building",
+    "ice_breaker": "Warm ups & Ice break",
+    "timefiller": "Timefillers",
+    "ask_age": "How old are the children?",
+    "6-12": "6-12",
+    "12+": "12+",
+    "ask_amount": "How many kids do you have?",
+    "up to 5": "up to 5",
+    "5-20": "5-20",
+    "20+": "20+",
+    "ask_location": "Where are you?",
+    "inside": "Inside",
+    "outside": "Outside",
+    "ask_props": "Do you have any props?",
+    "yes": "Yes",
+    "no": "No",
+    "hi_boss": "Hi boss\n\nexit to user mode with /stop\n\ncurrent password is\n\n",
+    "change": "Would you like to change it?",
+    "sorry": "You are not my boss, maybe later...",
+    "send_pass": "Ok man, set the new PASSWORD",
+    "updated": "Ok man, set the new PASSWORD",
+    "new_pass": "New password is\n\n"
 }
+  

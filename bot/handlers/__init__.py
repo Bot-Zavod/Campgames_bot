@@ -16,7 +16,7 @@ from .handlers import check_password
 from .handlers import check_time
 from .handlers import error_handler
 from .handlers import rand
-from .handlers import set_lang
+#from .handlers import set_lang
 from .handlers import start
 from .handlers import start_query
 from .handlers import stop_bot

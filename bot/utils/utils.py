@@ -15,7 +15,7 @@ async def send_msg_with_keyboard(
     )
 
 
-def get_lang(update: Update) -> int:
+'''def get_lang(update: Update) -> int:
     chat_id = update.message.chat.id
     lang = db_interface.get_language(chat_id)
-    return lang
+    return lang'''
