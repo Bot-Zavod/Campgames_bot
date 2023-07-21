@@ -60,7 +60,8 @@ class DBSession:
         """returns game description by it's name and lang"""
 
         game_data = [Game.description, Game.name]
-
+        if len(name)>60:
+            name = name[:60]
         """game_data = (
             [Game.description_ru, Game.name_ru],
             [Game.description_en, Game.name_en],

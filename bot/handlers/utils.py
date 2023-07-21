@@ -32,6 +32,8 @@ async def start_query(update: Update, context: ContextTypes.DEFAULT_TYPE):
     return State.GAMES
 
 def change_indent(description:str):
+    if description.find('\n')==-1:
+        return description
     index = description.find("\n")
     text_str = ''
     if description[index+1]!='\n':
