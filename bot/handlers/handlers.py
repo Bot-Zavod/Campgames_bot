@@ -13,7 +13,7 @@ from telegram.ext import ConversationHandler
 from bot.config import settings
 from bot.data import text
 from bot.database import db_interface
-from bot.handlers.utils import start_query
+from bot.handlers.utils import change_indent, start_query
 from bot.password import validate_password
 from bot.utils import State
 from bot.utils.logs import log_message
@@ -76,9 +76,7 @@ async def rand(update: Update, context: ContextTypes.DEFAULT_TYPE):
             text="database is empty, please go to the admin console to refresh database",
         )
     else:
-        if random_game.find("\n") != -1:
-            index = random_game.find("\n")
-            random_game = f"<b>{random_game[:index]}</b>" + random_game[index:]
+        random_game = change_indent(random_game)
         await context.bot.send_message(
             chat_id=chat_id, text=random_game, parse_mode="HTML"
         )

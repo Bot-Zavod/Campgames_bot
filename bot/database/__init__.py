@@ -65,7 +65,7 @@ class DBSession:
             [Game.description_ru, Game.name_ru],
             [Game.description_en, Game.name_en],
         )[lang_ru]"""
-        description = session.query(game_data[0]).filter(game_data[1] == name).first()
+        description = session.query(game_data[0]).filter(game_data[1].contains(f'%{name}%')).first()
         return description[0] if description else ""
 
     @local_session

@@ -6,7 +6,7 @@ from telegram.ext import ContextTypes
 
 from bot.data import text
 from bot.database import db_interface
-from bot.handlers.utils import start_query
+from bot.handlers.utils import change_indent, start_query
 from bot.utils import send_msg_with_keyboard
 from bot.utils import State
 from bot.utils import User
@@ -238,9 +238,7 @@ async def final_answer(update: Update, context: ContextTypes.DEFAULT_TYPE):
     user_manager.current_users[chat_id].set_flag(7)
 
     description = db_interface.get_game_description(massage)
-    if description.find("\n") != -1:
-        index = description.find("\n")
-        description = f"<b>{description[:index]}</b>" + description[index:]
+    description = change_indent(description)
     reply_keyboard = [[text["back"], text["menu"]]]
 
     await send_msg_with_keyboard(update, context, description, reply_keyboard)
