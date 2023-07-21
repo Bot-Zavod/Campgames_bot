@@ -31,15 +31,14 @@ async def start_query(update: Update, context: ContextTypes.DEFAULT_TYPE):
     )
     return State.GAMES
 
-def change_indent(description:str):
-    if description.find('\n')==-1:
-        return description
+
+def change_indent(description: str) -> str:
+    """changes indent in description and makes first line bold"""
+
     index = description.find("\n")
-    text_str = ''
-    if description[index+1]!='\n':
-        text_str = '\n'
-    if description[index+2]=='\n':
-        description = description.replace('\n','',1)
-        index+=1
-    description = f"<b>{description[:index]}</b>" + text_str + description[index:]
+
+    if index == -1:
+        return description
+
+    description = f"<b>{description[:index]}</b>" + "\n\n" + description[index:].strip()
     return description

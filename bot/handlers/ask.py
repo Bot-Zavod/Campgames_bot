@@ -6,7 +6,8 @@ from telegram.ext import ContextTypes
 
 from bot.data import text
 from bot.database import db_interface
-from bot.handlers.utils import change_indent, start_query
+from bot.handlers.utils import change_indent
+from bot.handlers.utils import start_query
 from bot.utils import send_msg_with_keyboard
 from bot.utils import State
 from bot.utils import User

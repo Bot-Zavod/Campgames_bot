@@ -13,7 +13,8 @@ from telegram.ext import ConversationHandler
 from bot.config import settings
 from bot.data import text
 from bot.database import db_interface
-from bot.handlers.utils import change_indent, start_query
+from bot.handlers.utils import change_indent
+from bot.handlers.utils import start_query
 from bot.password import validate_password
 from bot.utils import State
 from bot.utils.logs import log_message

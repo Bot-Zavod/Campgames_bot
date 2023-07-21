@@ -45,7 +45,7 @@ commands = [
 
 def back_handler(callback: Callable) -> MessageHandler:
     # return MessageHandler(filters.Text(list(text["back"].values())), callback)
-    return MessageHandler(filters.Text(text["back"]), callback)
+    return MessageHandler(filters.Text([text["back"]]), callback)
 
 
 conversation_handler = ConversationHandler(
@@ -55,7 +55,7 @@ conversation_handler = ConversationHandler(
         ##################
         # GAMES ##########
         ##################
-        State.GAMES: [
+        State.GAMES: [  # TODO: filters.Text takes a list of strings, not a single string
             MessageHandler(filters.Text(text["games"]), ask.ask_type),
             MessageHandler(filters.Text(text["random"]), rand),
             # MessageHandler(filters.Text(list(text["games"].values())), ask.ask_type),
