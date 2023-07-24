@@ -62,10 +62,6 @@ class DBSession:
         game_data = [Game.description, Game.name]
         if len(name) > 60:
             name = name[:60]
-        """game_data = (
-            [Game.description_ru, Game.name_ru],
-            [Game.description_en, Game.name_en],
-        )[lang_ru]"""
         description = (
             session.query(game_data[0])
             .filter(game_data[1].contains(f"%{name}%"))
@@ -76,27 +72,9 @@ class DBSession:
     @local_session
     def get_random_game_description(self, session) -> str:  # lang_ru: int = 0
         """returns random game description by lang"""
-        # TODO: prevent error when db is empty(completed)
-        """if not lang_ru:
-            query = session.query(Game.description_ru)"""
         query = session.query(Game.description)
         game = query.filter(Game.id == randint(1, session.query(Game).count())).first()
         return game[0]
-
-    """@local_session
-    def get_all_games(self, session) -> list:
-        games = session.query(
-            Game.name_ru,
-            Game.name_en,
-            Game.description_ru,
-            Game.description_en,
-            Game.game_type,
-            Game.kids_age,
-            Game.kids_amount,
-            Game.location,
-            Game.props,
-        ).all()
-        return games"""
 
     @local_session
     def delete_games(self, session) -> int:
@@ -107,17 +85,6 @@ class DBSession:
 
     @local_session
     def set_games(self, session, games: list):
-        """
-        name_ru=game[0],
-        name_en=game[1],
-        description_ru=game[2],
-        description_en=game[3],
-        game_type=game[4],
-        kids_age=game[5],
-        kids_amount=game[6],
-        location=game[7],
-        props=game[8],
-        """
         objects = [
             Game(
                 name=game[0][: game[0].find("\n")],
@@ -161,22 +128,6 @@ class DBSession:
         if user:
             return user.is_registered
         return False
-
-    """@local_session
-    def get_language(self, session, chat_id: int) -> Optional[int]:
-        user = session.query(User).get(chat_id)
-        if user:
-            return user.language
-        return None"""
-
-    """@local_session
-    def set_language(self, session, chat_id: int, lang: int):
-        user = session.query(User).get(chat_id)
-        if not user:
-            user = self.create_user(chat_id, lang)
-        else:
-            user.language = lang
-            session.commit()"""
 
 
 db_interface = DBSession()

@@ -19,40 +19,9 @@ from bot.password import validate_password
 from bot.utils import State
 from bot.utils.logs import log_message
 
-# from telegram import ReplyKeyboardMarkup
-
-
-"""async def set_lang(update: Update, context: ContextTypes.DEFAULT_TYPE) -> int:
-    log_message(update)
-    chat_id = update.message.chat.id
-    db_interface.set_language(chat_id, 1)
-    return 1
-    langs = {text["langs"][0]: 0, text["langs"][1]: 1}
-    lang = langs.get(update.message.text, None)
-    if lang is None:
-        return await ask_lang(update, context)
-
-
-    if not db_interface.check_user(chat_id):
-        return await ask_password(update, context)
-    return await start(update, context)"""
-
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
     """check if user is authorized and have language"""
-
-    """log_message(update)
-    chat_id = update.message.chat.id
-    lang = db_interface.get_language(chat_id)
-
-    if lang is None:
-        await set_lang(update, context)
-    if not db_interface.check_user(chat_id):
-        return await ask_password(update, context)
-
-    await context.bot.send_message(
-        chat_id=chat_id, text=text["start"][lang], reply_markup=ReplyKeyboardRemove()
-    )"""
 
     log_message(update)
     chat_id = update.message.chat.id
@@ -91,28 +60,6 @@ async def stop_bot(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 
 ################################
-###### Language ################
-################################
-
-
-"""async def ask_lang(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    log_message(update)
-    chat_id = update.message.chat.id
-    reply_keyboard = [[text["langs"][0]], [text["langs"][1]]]
-    markup = ReplyKeyboardMarkup(
-        reply_keyboard, one_time_keyboard=True, resize_keyboard=True
-    )
-    lang = db_interface.get_language(chat_id)
-    ask_text = ""
-    if lang:
-        ask_text += text["ask_lang"][lang]
-    else:
-        ask_text += text["ask_lang"][0]  # + "\n" + text["ask_lang"][1]
-    await context.bot.send_message(chat_id=chat_id, text=ask_text, reply_markup=markup)
-    return State.CHOOSE_LANG"""
-
-
-################################
 ###### Password ################
 ################################
 
@@ -130,14 +77,7 @@ async def ask_password(update: Update, context: ContextTypes.DEFAULT_TYPE):
 async def check_password(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
     chat_id = update.message.chat.id
-    # lang = db_interface.get_language(chat_id)
 
-    """if validate_password(update.message.text):
-        db_interface.authorize_user(chat_id)
-        await context.bot.send_message(chat_id=chat_id, text=text["pass_success"][lang])
-        return await start_query(update, context)
-
-    await context.bot.send_message(chat_id=chat_id, text=text["pass_wrong"][lang])"""
     if validate_password(update.message.text):
         db_interface.authorize_user(chat_id)
         await context.bot.send_message(chat_id=chat_id, text=text["pass_success"])

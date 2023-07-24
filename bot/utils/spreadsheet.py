@@ -30,12 +30,6 @@ def spreadsheet() -> gspread.Worksheet:
     return worksheet
 
 
-"""def update_spreadsheet_from_db() -> None:
-    worksheet = spreadsheet()
-    games = db_interface.get_all_games()
-    worksheet.update(f"A2:I{len(games)+1}", games)  # except headings"""
-
-
 def update_games_in_db() -> Tuple[int, int]:
     """drops bd and write data from spreadsheet"""
     worksheet = spreadsheet()

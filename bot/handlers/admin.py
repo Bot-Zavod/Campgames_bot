@@ -37,20 +37,6 @@ def restrict_user(func):
 @restrict_user
 async def admin(update: Update, context: ContextTypes.DEFAULT_TYPE):
     log_message(update)
-    # lang = get_lang(update)
-    """if lang is None:
-        lang = await set_lang(update, context)
-    password = get_password()
-    reply_keyboard = [
-        [text["update"][lang]],
-        [text["change_password"][lang]],
-    ]
-    markup = ReplyKeyboardMarkup(reply_keyboard, resize_keyboard=True)
-    chat_id = update.message.chat.id
-    await context.bot.send_message(
-        chat_id=chat_id, text=text["hi_boss"][lang] + password, reply_markup=markup
-    )
-    return State.ADMIN"""
 
     password = get_password()
     reply_keyboard = [

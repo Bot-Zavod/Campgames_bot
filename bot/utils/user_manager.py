@@ -4,8 +4,6 @@ from typing import Optional
 
 from loguru import logger
 
-from bot.database import db_interface
-
 
 class QuestionType(str, Enum):
     TYPE = "type"
@@ -21,7 +19,6 @@ class User:
     def __init__(self, chat_id: int, username: str):
         self.chat_id: int = chat_id
         self.username: str = username
-        # self.lang: int = db_interface.get_language(self.chat_id)
         self.answers: Dict[QuestionType, Optional[str]] = {
             QuestionType.TYPE: None,
             QuestionType.AGE: None,
